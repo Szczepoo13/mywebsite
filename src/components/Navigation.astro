@@ -8,18 +8,16 @@ const links = [
 ];
 ---
 
-<header class="border-b border-neutral-300 bg-white">
+<header class="panel-sunken">
 	<nav class="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-4 px-4 py-3">
-		<a href="/" class="font-mono text-sm font-semibold tracking-tight text-neutral-900">
-			SZCZEPAN GURGUL
-		</a>
+		<a href="/" class="font-mono text-sm font-bold tracking-tight text-ink">SZCZEPAN GURGUL</a>
 		<ul class="flex flex-wrap items-center gap-5 text-sm">
 			{
 				links.map((link) => (
 					<li>
 						<a
 							href={link.href}
-							class="text-neutral-600 hover:text-blue-700 hover:underline"
+							class="text-link hover:underline"
 							target={link.external ? "_blank" : undefined}
 							rel={link.external ? "noreferrer" : undefined}
 						>

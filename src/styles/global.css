@@ -1,2 +1,27 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+@theme {
+	--color-panel: #dcdbe8;
+	--color-panel-dark: #b6b4d2;
+	--color-bevel: #8886ac;
+	--color-ink: #1a1a1a;
+	--color-link: #0000ee;
+	--color-accent-green: #006000;
+	--color-accent-red: #cc0000;
+}
+
+/* Windows-98-style 3D bevel, in the spirit of the old Curve Finance UI. */
+@layer components {
+	.panel-raised {
+		background-color: var(--color-panel);
+		border: 3px solid var(--color-bevel);
+		border-style: outset;
+	}
+
+	.panel-sunken {
+		background-color: var(--color-panel);
+		border: 3px solid var(--color-bevel);
+		border-style: inset;
+	}
+}

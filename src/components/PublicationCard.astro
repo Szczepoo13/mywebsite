@@ -10,11 +10,11 @@ interface Props {
 const { title, authors, venue, date, url } = Astro.props;
 ---
 
-<div class="border border-neutral-300 px-5 py-4">
-	<h2 class="text-base font-semibold tracking-tight">
+<div class="panel-raised px-5 py-4">
+	<h2 class="text-base font-bold tracking-tight">
 		{
 			url ? (
-				<a href={url} class="hover:text-blue-700 hover:underline" target="_blank" rel="noreferrer">
+				<a href={url} class="text-link hover:underline" target="_blank" rel="noreferrer">
 					{title}
 				</a>
 			) : (
@@ -22,6 +22,6 @@ const { title, authors, venue, date, url } = Astro.props;
 			)
 		}
 	</h2>
-	<p class="mt-1 text-sm text-neutral-600">{authors}</p>
-	<p class="mt-1 text-xs text-neutral-500">{venue} · {date.getFullYear()}</p>
+	<p class="mt-1 text-sm">{authors}</p>
+	<p class="mt-1 text-xs">{venue} · {date.getFullYear()}</p>
 </div>
