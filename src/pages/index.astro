@@ -1,7 +1,6 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import PublicationCard from "../components/PublicationCard.astro";
 import Badge from "../components/Badge.astro";
 
 const publications = (await getCollection("publications")).sort(
@@ -17,6 +16,22 @@ const stack = [
 	"Docker",
 	"Kubernetes",
 	"PostgreSQL",
+];
+
+// TODO: replace with real Uniswap v4 hook incubator details.
+const achievements = [
+	{
+		title: "BCOLN Challenge Award — Best Distributed dApp",
+		description: "Won for the Decentralized Sports Betting Platform, 2024.",
+	},
+	{
+		title: "Uniswap v4 Hook Incubator",
+		description: "TODO: add details.",
+	},
+	{
+		title: "Conference Presentations",
+		description: "Presented research in person at BCK24 (Zürich, 2024) and BCK25 (Mumbai, 2025).",
+	},
 ];
 ---
 
@@ -46,19 +61,45 @@ const stack = [
 	</section>
 
 	<section class="mt-6">
-		<h2 class="text-xl font-bold tracking-tight">Publications</h2>
+		<h2 class="text-xl font-bold tracking-tight">Achievements</h2>
 		<div class="mt-4 flex flex-col gap-3">
 			{
-				publications.map((publication) => (
-					<PublicationCard
-						title={publication.data.title}
-						authors={publication.data.authors}
-						venue={publication.data.venue}
-						date={publication.data.date}
-						url={publication.data.url}
-					/>
+				achievements.map((achievement) => (
+					<div class="card px-5 py-4">
+						<h3 class="text-base font-bold tracking-tight">{achievement.title}</h3>
+						<p class="mt-2 text-sm text-muted">{achievement.description}</p>
+					</div>
 				))
 			}
+		</div>
+
+		<div class="mt-6">
+			<h3 class="text-sm font-bold tracking-tight text-muted">Publications</h3>
+			<div class="mt-2 grid gap-2 sm:grid-cols-2">
+				{
+					publications.map((publication) => (
+						<div class="card px-3 py-2 text-xs">
+							<p class="font-bold">
+								{publication.data.url ? (
+									<a
+										href={publication.data.url}
+										class="text-accent-blue hover:underline"
+										target="_blank"
+										rel="noreferrer"
+									>
+										{publication.data.title}
+									</a>
+								) : (
+									publication.data.title
+								)}
+							</p>
+							<p class="mt-1 text-muted">
+								{publication.data.venue} · {publication.data.date.getFullYear()}
+							</p>
+						</div>
+					))
+				}
+			</div>
 		</div>
 	</section>
 </BaseLayout>
