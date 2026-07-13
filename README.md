@@ -27,16 +27,16 @@ npm run preview   # preview the production build
 Completed
 
 - ✅ Project initialization (Astro + TypeScript strict + Tailwind v4)
+- ✅ Navigation
+- ✅ Homepage
+- ✅ Footer
 
 Next
 
-- ⬜ Navigation
-- ⬜ Homepage
-- ⬜ Footer
+- ⬜ Blog (content collection)
 
 Future
 
-- ⬜ Blog (content collection)
 - ⬜ Projects (content collection)
 - ⬜ Publications (content collection)
 - ⬜ Contact
