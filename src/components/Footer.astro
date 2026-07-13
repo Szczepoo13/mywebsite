@@ -1,12 +1,25 @@
 ---
 const year = new Date().getFullYear();
+// TODO: replace "#" with a real LinkedIn URL.
+const links = [
+	{ href: "https://github.com/Szczepoo13", label: "GitHub" },
+	{ href: "#", label: "LinkedIn" },
+];
 ---
 
 <footer class="panel-sunken">
 	<div class="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-xs">
 		<p>&copy; {year} Szczepan Gurgul</p>
-		<a href="https://github.com/Szczepoo13" class="text-link hover:underline" target="_blank" rel="noreferrer">
-			GitHub
-		</a>
+		<ul class="flex gap-4">
+			{
+				links.map((link) => (
+					<li>
+						<a href={link.href} class="text-link hover:underline" target="_blank" rel="noreferrer">
+							{link.label}
+						</a>
+					</li>
+				))
+			}
+		</ul>
 	</div>
 </footer>

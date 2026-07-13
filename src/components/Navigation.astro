@@ -2,9 +2,6 @@
 const links = [
 	{ href: "/blog/", label: "Blog" },
 	{ href: "/projects/", label: "Projects" },
-	{ href: "/publications/", label: "Publications" },
-	{ href: "/contact/", label: "Contact" },
-	{ href: "https://github.com/Szczepoo13", label: "GitHub", external: true },
 ];
 ---
 
@@ -15,12 +12,7 @@ const links = [
 			{
 				links.map((link) => (
 					<li>
-						<a
-							href={link.href}
-							class="text-link hover:underline"
-							target={link.external ? "_blank" : undefined}
-							rel={link.external ? "noreferrer" : undefined}
-						>
+						<a href={link.href} class="text-link hover:underline">
 							{link.label}
 						</a>
 					</li>
