@@ -9,12 +9,12 @@ interface Props {
 const { slug, title, description, date } = Astro.props;
 ---
 
-<a href={`/blog/${slug}/`} class="panel-raised block px-5 py-4 hover:[border-style:inset]">
+<a href={`/blog/${slug}/`} class="card block px-5 py-4 transition-colors hover:border-accent-blue">
 	<div class="flex items-baseline justify-between gap-4">
 		<h2 class="text-base font-bold tracking-tight">{title}</h2>
-		<time datetime={date.toISOString()} class="shrink-0 text-xs">
+		<time datetime={date.toISOString()} class="shrink-0 text-xs text-muted">
 			{date.toISOString().slice(0, 10)}
 		</time>
 	</div>
-	<p class="mt-2 text-sm">{description}</p>
+	<p class="mt-2 text-sm text-muted">{description}</p>
 </a>

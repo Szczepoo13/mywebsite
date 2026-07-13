@@ -21,21 +21,23 @@ const stack = [
 ---
 
 <BaseLayout title="Szczepan Gurgul">
-	<section class="panel-raised px-6 py-8">
+	<section class="card px-6 py-8">
 		<h1 class="text-2xl font-bold tracking-tight">Szczepan Gurgul</h1>
-		<p class="mt-1 text-sm">Software &amp; Blockchain Engineer</p>
+		<p class="mt-1 text-sm text-muted">Software &amp; Blockchain Engineer</p>
 		<p class="mt-6 max-w-2xl text-sm leading-relaxed">
 			Software engineer with blockchain expertise and a background in distributed systems. I
 			build secure, maintainable systems and tooling — from smart contracts and DeFi primitives
 			(DEX/AMM) to performance-oriented infrastructure — and have co-authored two research
 			papers on blockchain technologies.
 		</p>
-		<div class="mt-6 border-t-2 border-bevel pt-4 text-sm">
+		<div class="mt-6 border-t border-border pt-4 text-sm">
 			<p class="font-bold">Education</p>
-			<p class="mt-1">M.Sc. Informatics, University of Zürich — 2026 (magna cum laude)</p>
-			<p class="mt-1">B.Sc. Mechatronic Engineering, AGH University of Science and Technology — 2023</p>
+			<p class="mt-1 text-muted">M.Sc. Informatics, University of Zürich — 2026 (magna cum laude)</p>
+			<p class="mt-1 text-muted">
+				B.Sc. Mechatronic Engineering, AGH University of Science and Technology — 2023
+			</p>
 		</div>
-		<div class="mt-6 border-t-2 border-bevel pt-4 text-sm">
+		<div class="mt-6 border-t border-border pt-4 text-sm">
 			<p class="font-bold">Stack</p>
 			<div class="mt-2 flex flex-wrap gap-2">
 				{stack.map((item) => <Badge label={item} />)}

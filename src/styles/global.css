@@ -2,59 +2,45 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-	/* periwinkle — body background, item cards */
-	--color-panel: #c9c6f2;
-	--color-bevel: #8d8ac4;
+	--color-page: #f1f2f4;
+	--color-surface: #ffffff;
+	--color-surface-alt: #eceef1;
+	--color-border: #dde1e6;
 
-	/* golden parchment — the list-wrapper "paper" box */
-	--color-paper: #f5e3ad;
-	--color-paper-bevel: #c9a13f;
+	--color-ink: #16181d;
+	--color-muted: #6b7280;
 
-	/* indigo — header bar */
-	--color-header: #4b4b90;
-	--color-header-bevel: #7575ba;
-
-	/* wine — footer bar, deliberately not navy */
-	--color-footer: #7a2f4d;
-	--color-footer-bevel: #a85274;
-
-	--color-ink: #1a1a1a;
-	--color-cream: #faf3dc;
-	--color-link: #0000ee;
-	--color-gold: #e6b03c;
-	--color-accent-green: #006000;
-	--color-accent-red: #cc0000;
+	--color-accent-blue: #3f5bf6;
+	--color-accent-blue-hover: #3349d1;
+	--color-gold: #b8860b;
 }
 
-/* Windows-98-style 3D bevel, in the spirit of the old Curve Finance UI. */
+/* Flat modern surfaces, in the spirit of the current Curve DEX UI. */
 @layer components {
-	.panel-raised {
-		background-color: var(--color-panel);
-		border: 3px solid var(--color-bevel);
-		border-style: outset;
+	.card {
+		background-color: var(--color-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 0.5rem;
 	}
 
-	.panel-sunken {
-		background-color: var(--color-panel);
-		border: 3px solid var(--color-bevel);
-		border-style: inset;
+	.bar {
+		background-color: var(--color-surface-alt);
 	}
 
-	.panel-paper {
-		background-color: var(--color-paper);
-		border: 3px solid var(--color-paper-bevel);
-		border-style: outset;
+	.btn-blue {
+		background-color: var(--color-accent-blue);
+		color: #fff;
+		border-radius: 0.5rem;
 	}
 
-	.panel-header {
-		background-color: var(--color-header);
-		border: 3px solid var(--color-header-bevel);
-		border-style: inset;
+	.btn-blue:hover {
+		background-color: var(--color-accent-blue-hover);
 	}
 
-	.panel-footer {
-		background-color: var(--color-footer);
-		border: 3px solid var(--color-footer-bevel);
-		border-style: inset;
+	.badge-gold {
+		background-color: var(--color-surface);
+		border: 1px solid var(--color-gold);
+		color: var(--color-gold);
+		border-radius: 9999px;
 	}
 }
