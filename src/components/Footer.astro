@@ -7,14 +7,14 @@ const links = [
 ];
 ---
 
-<footer class="panel-sunken">
-	<div class="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-xs">
+<footer class="panel-footer">
+	<div class="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-xs text-cream">
 		<p>&copy; {year} Szczepan Gurgul</p>
 		<ul class="flex gap-4">
 			{
 				links.map((link) => (
 					<li>
-						<a href={link.href} class="text-link hover:underline" target="_blank" rel="noreferrer">
+						<a href={link.href} class="text-gold hover:underline" target="_blank" rel="noreferrer">
 							{link.label}
 						</a>
 					</li>

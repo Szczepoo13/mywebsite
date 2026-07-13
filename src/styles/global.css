@@ -2,11 +2,26 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
+	/* lavender — body background, item cards */
 	--color-panel: #dcdbe8;
-	--color-panel-dark: #b6b4d2;
 	--color-bevel: #8886ac;
+
+	/* parchment — the list-wrapper "paper" box */
+	--color-paper: #e8dfc8;
+	--color-paper-bevel: #a8926a;
+
+	/* deep navy — header bar */
+	--color-header: #34345c;
+	--color-header-bevel: #55558c;
+
+	/* deep olive-brown — footer bar, deliberately not navy */
+	--color-footer: #423a26;
+	--color-footer-bevel: #6b5c3e;
+
 	--color-ink: #1a1a1a;
+	--color-cream: #ede6d3;
 	--color-link: #0000ee;
+	--color-gold: #cf9f34;
 	--color-accent-green: #006000;
 	--color-accent-red: #cc0000;
 }
@@ -22,6 +37,24 @@
 	.panel-sunken {
 		background-color: var(--color-panel);
 		border: 3px solid var(--color-bevel);
+		border-style: inset;
+	}
+
+	.panel-paper {
+		background-color: var(--color-paper);
+		border: 3px solid var(--color-paper-bevel);
+		border-style: outset;
+	}
+
+	.panel-header {
+		background-color: var(--color-header);
+		border: 3px solid var(--color-header-bevel);
+		border-style: inset;
+	}
+
+	.panel-footer {
+		background-color: var(--color-footer);
+		border: 3px solid var(--color-footer-bevel);
 		border-style: inset;
 	}
 }
