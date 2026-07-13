@@ -2,26 +2,26 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-	/* lavender — body background, item cards */
-	--color-panel: #dcdbe8;
-	--color-bevel: #8886ac;
+	/* periwinkle — body background, item cards */
+	--color-panel: #c9c6f2;
+	--color-bevel: #8d8ac4;
 
-	/* parchment — the list-wrapper "paper" box */
-	--color-paper: #e8dfc8;
-	--color-paper-bevel: #a8926a;
+	/* golden parchment — the list-wrapper "paper" box */
+	--color-paper: #f5e3ad;
+	--color-paper-bevel: #c9a13f;
 
-	/* deep navy — header bar */
-	--color-header: #34345c;
-	--color-header-bevel: #55558c;
+	/* indigo — header bar */
+	--color-header: #4b4b90;
+	--color-header-bevel: #7575ba;
 
-	/* deep maroon — footer bar, deliberately not navy */
-	--color-footer: #4a2030;
-	--color-footer-bevel: #74374c;
+	/* wine — footer bar, deliberately not navy */
+	--color-footer: #7a2f4d;
+	--color-footer-bevel: #a85274;
 
 	--color-ink: #1a1a1a;
-	--color-cream: #ede6d3;
+	--color-cream: #faf3dc;
 	--color-link: #0000ee;
-	--color-gold: #cf9f34;
+	--color-gold: #e6b03c;
 	--color-accent-green: #006000;
 	--color-accent-red: #cc0000;
 }
