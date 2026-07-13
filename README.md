@@ -21,10 +21,8 @@ live in the footer rather than a dedicated Contact page.
 
 ## Content
 
-Blog and Projects each ship with one placeholder entry (`src/content/*/example-*.md`) to prove the
-collection renders end to end — replace or delete before launch. Publications are pulled from the
-same kind of collection and rendered on the homepage. Still pending real copy (all marked `TODO` in
-code): the bio paragraph, the Education line, and the LinkedIn URL in the Footer.
+Bio, Education, Stack, Projects, and Publications are real, pulled from the CV. Blog is still
+lorem-ipsum placeholder content (`src/content/blog/*.md`) — replace or delete once real posts exist.
 
 ## Development
 

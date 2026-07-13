@@ -2,25 +2,44 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PublicationCard from "../components/PublicationCard.astro";
+import Badge from "../components/Badge.astro";
 
 const publications = (await getCollection("publications")).sort(
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
+
+const stack = [
+	"Ξ Ethereum",
+	"Solidity",
+	"Rust",
+	"TypeScript",
+	"Python",
+	"Docker",
+	"Kubernetes",
+	"PostgreSQL",
+];
 ---
 
 <BaseLayout title="Szczepan Gurgul">
 	<section class="panel-raised px-6 py-8">
 		<h1 class="text-2xl font-bold tracking-tight">Szczepan Gurgul</h1>
-		<p class="mt-1 text-sm">Blockchain Researcher / Software Engineer</p>
-		<!-- TODO: replace with real bio copy. -->
+		<p class="mt-1 text-sm">Software &amp; Blockchain Engineer</p>
 		<p class="mt-6 max-w-2xl text-sm leading-relaxed">
-			I research blockchain protocols and build software at the intersection of distributed
-			systems and applied cryptography.
+			Software engineer with blockchain expertise and a background in distributed systems. I
+			build secure, maintainable systems and tooling — from smart contracts and DeFi primitives
+			(DEX/AMM) to performance-oriented infrastructure — and have co-authored two research
+			papers on blockchain technologies.
 		</p>
-		<!-- TODO: replace with real education details. -->
 		<div class="mt-6 border-t-2 border-bevel pt-4 text-sm">
 			<p class="font-bold">Education</p>
-			<p class="mt-1">Ipsum Institute of Technology, M.Sc. Lorem Studies — 2019</p>
+			<p class="mt-1">M.Sc. Informatics, University of Zürich — 2026 (magna cum laude)</p>
+			<p class="mt-1">B.Sc. Mechatronic Engineering, AGH University of Science and Technology — 2023</p>
+		</div>
+		<div class="mt-6 border-t-2 border-bevel pt-4 text-sm">
+			<p class="font-bold">Stack</p>
+			<div class="mt-2 flex flex-wrap gap-2">
+				{stack.map((item) => <Badge label={item} />)}
+			</div>
 		</div>
 	</section>
 
