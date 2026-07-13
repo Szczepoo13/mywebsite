@@ -5,17 +5,17 @@ const links = [
 ];
 ---
 
-<header class="bar border-b border-border">
-	<nav class="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-4 px-4 py-3">
-		<a href="/" class="block leading-tight">
+<header class="bar border-b-2 border-border">
+	<nav class="mx-auto flex max-w-4xl items-stretch justify-between px-4">
+		<a href="/" class="block py-3 leading-tight">
 			<span class="font-mono text-sm font-bold tracking-tight text-ink">SZCZEPAN GURGUL</span>
 			<span class="block text-xs text-muted">[home]</span>
 		</a>
-		<ul class="flex flex-wrap items-center gap-2 text-sm">
+		<ul class="flex text-sm">
 			{
 				links.map((link) => (
-					<li>
-						<a href={link.href} class="btn-blue block px-3 py-1 font-semibold">
+					<li class="flex">
+						<a href={link.href} class="btn-blue flex items-center px-4 font-semibold">
 							{link.label}
 						</a>
 					</li>

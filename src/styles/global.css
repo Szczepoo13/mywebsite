@@ -5,7 +5,7 @@
 	--color-page: #f1f2f4;
 	--color-surface: #ffffff;
 	--color-surface-alt: #eceef1;
-	--color-border: #dde1e6;
+	--color-border: #aeb4bc;
 
 	--color-ink: #16181d;
 	--color-muted: #6b7280;
@@ -19,8 +19,7 @@
 @layer components {
 	.card {
 		background-color: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: 0.5rem;
+		border: 2px solid var(--color-border);
 	}
 
 	.bar {
@@ -30,7 +29,6 @@
 	.btn-blue {
 		background-color: var(--color-accent-blue);
 		color: #fff;
-		border-radius: 0.5rem;
 	}
 
 	.btn-blue:hover {
