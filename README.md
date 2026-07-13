@@ -14,11 +14,17 @@ Deployed to GitHub Pages.
 - Astro content collections (Markdown) for blog / projects / publications
 - GitHub Pages for hosting
 
+## Site structure
+
+Kept deliberately small: Home (bio, education, publications), Blog, Projects. GitHub and LinkedIn
+live in the footer rather than a dedicated Contact page.
+
 ## Content
 
-Blog, Projects, and Publications each ship with one placeholder entry (`src/content/*/example-*.md`)
-to prove the collection renders end to end. Replace or delete these before launch. The homepage bio
-copy is also a first draft — see the `TODO` comment in `src/pages/index.astro`.
+Blog and Projects each ship with one placeholder entry (`src/content/*/example-*.md`) to prove the
+collection renders end to end — replace or delete before launch. Publications are pulled from the
+same kind of collection and rendered on the homepage. Still pending real copy (all marked `TODO` in
+code): the bio paragraph, the Education line, and the LinkedIn URL in the Footer.
 
 ## Development
 
@@ -39,9 +45,9 @@ Completed
 - ✅ Footer
 - ✅ Blog (content collection)
 - ✅ Projects (content collection)
-- ✅ Publications (content collection)
-- ✅ Contact
+- ✅ Publications (on homepage)
 - ✅ Retro (old Curve UI) visual theme
+- ✅ Site structure simplified (Home / Blog / Projects, GitHub+LinkedIn in footer)
 
 Next
 
