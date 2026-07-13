@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ProjectCard from "../../components/ProjectCard.astro";
+import SectionWithSidebar from "../../components/SectionWithSidebar.astro";
 
 const projects = (await getCollection("projects")).sort(
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
@@ -9,8 +10,12 @@ const projects = (await getCollection("projects")).sort(
 ---
 
 <BaseLayout title="Projects — Szczepan Gurgul">
-	<h1 class="text-xl font-semibold tracking-tight">Projects</h1>
-	<div class="mt-6 flex flex-col gap-3">
+	<h1 class="text-xl font-bold tracking-tight">Projects</h1>
+	<!-- TODO: replace with real "about these projects" copy. -->
+	<SectionWithSidebar
+		title="About these projects"
+		description="Tools, protocols, and experiments — mostly blockchain infrastructure and applied cryptography."
+	>
 		{
 			projects.map((project) => (
 				<ProjectCard
@@ -22,5 +27,5 @@ const projects = (await getCollection("projects")).sort(
 				/>
 			))
 		}
-	</div>
+	</SectionWithSidebar>
 </BaseLayout>
