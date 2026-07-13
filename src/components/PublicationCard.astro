@@ -1,0 +1,27 @@
+---
+interface Props {
+	title: string;
+	authors: string;
+	venue: string;
+	date: Date;
+	url?: string;
+}
+
+const { title, authors, venue, date, url } = Astro.props;
+---
+
+<div class="border border-neutral-300 px-5 py-4">
+	<h2 class="text-base font-semibold tracking-tight">
+		{
+			url ? (
+				<a href={url} class="hover:text-blue-700 hover:underline" target="_blank" rel="noreferrer">
+					{title}
+				</a>
+			) : (
+				title
+			)
+		}
+	</h2>
+	<p class="mt-1 text-sm text-neutral-600">{authors}</p>
+	<p class="mt-1 text-xs text-neutral-500">{venue} · {date.getFullYear()}</p>
+</div>
