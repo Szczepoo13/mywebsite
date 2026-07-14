@@ -99,6 +99,11 @@ const achievements = [
 							{publication.data.description && (
 								<p class="mt-2 text-muted">{publication.data.description}</p>
 							)}
+							{publication.data.highlights && (
+								<ul class="mt-2 list-disc space-y-1 pl-4 text-muted">
+									{publication.data.highlights.map((point) => <li>{point}</li>)}
+								</ul>
+							)}
 							{publication.data.tags.length > 0 && (
 								<div class="mt-2 flex flex-wrap gap-1">
 									{publication.data.tags.map((tag) => (

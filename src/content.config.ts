@@ -35,7 +35,10 @@ const publications = defineCollection({
 		venue: z.string(),
 		date: z.coerce.date(),
 		url: z.string().url().optional(),
+		// Use one or the other: description for a short paragraph, highlights
+		// for a tight bullet list of what the work technically consisted of.
 		description: z.string().optional(),
+		highlights: z.array(z.string()).optional(),
 		tags: z.array(z.string()).default([]),
 	}),
 });
