@@ -10,7 +10,7 @@ const publications = (await getCollection("publications")).sort(
 const stackCategories = [
 	{
 		label: "AI",
-		items: ["LLM Agents", "Tool Calling", "RAG", "MCP"],
+		items: ["llm agents", "tool calling", "rag", "mcp"],
 	},
 	{
 		label: "Blockchain",
@@ -141,7 +141,7 @@ const achievements = [
 								<p class="mt-2 text-muted">{publication.data.description}</p>
 							)}
 							{publication.data.highlights && (
-								<ul class="mt-2 list-disc space-y-1 pl-4 text-muted">
+								<ul class="mt-2 list-disc space-y-2 pl-4 text-muted">
 									{publication.data.highlights.map((point) => <li>{point}</li>)}
 								</ul>
 							)}
