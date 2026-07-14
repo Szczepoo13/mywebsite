@@ -1,24 +1,9 @@
 ---
 const year = new Date().getFullYear();
-const links = [
-	{ href: "https://github.com/Szczepoo13", label: "GitHub" },
-	{ href: "https://www.linkedin.com/in/szczepan-gurgul-aaa106215", label: "LinkedIn" },
-];
 ---
 
 <footer class="bar border-t-2 border-border">
-	<div class="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-xs text-muted">
+	<div class="mx-auto flex max-w-4xl items-center px-4 py-4 text-xs text-muted">
 		<p>&copy; {year} Szczepan Gurgul</p>
-		<ul class="flex gap-4">
-			{
-				links.map((link) => (
-					<li>
-						<a href={link.href} class="text-accent-blue hover:underline" target="_blank" rel="noreferrer">
-							{link.label}
-						</a>
-					</li>
-				))
-			}
-		</ul>
 	</div>
 </footer>
