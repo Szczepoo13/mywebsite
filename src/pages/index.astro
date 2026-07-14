@@ -7,15 +7,60 @@ const publications = (await getCollection("publications")).sort(
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 
-const stack = [
-	"Ξ Ethereum",
-	"Solidity",
-	"Rust",
-	"TypeScript",
-	"Python",
-	"Docker",
-	"Kubernetes",
-	"PostgreSQL",
+const stackCategories = [
+	{
+		label: "AI",
+		items: ["LLM Agents", "Tool Calling", "RAG", "MCP", "Eliza OS"],
+	},
+	{
+		label: "Blockchain",
+		items: [
+			"Ξ Ethereum",
+			"Smart Contracts",
+			"P2P",
+			"Web3.js",
+			"Ethers.js",
+			"Foundry",
+			"Ganache",
+			"Layer 1",
+			"Layer 2",
+			"Sequencers",
+			"Provers",
+			"DEX",
+			"AMM",
+			"Bridges",
+			"Oracles",
+			"Zero-Knowledge Proofs",
+			"MEV",
+			"Trading Bots",
+		],
+	},
+	{
+		label: "Software Engineering",
+		items: [
+			"Automated Testing",
+			"TDD",
+			"Scrum",
+			"Jira",
+			"CI/CD",
+			"Git",
+			"REST APIs",
+			"Postgres",
+			"Linux",
+			"SQL",
+			"Microservices",
+			"Kubernetes",
+			"Docker",
+			"AWS",
+			"GCP",
+			"Grafana",
+			"Prometheus",
+		],
+	},
+	{
+		label: "Programming Languages",
+		items: ["Python", "PHP", "Rust", "TypeScript", "JavaScript", "Bash", "Solidity", "C++"],
+	},
 ];
 
 // TODO: replace with real Uniswap v4 hook incubator details.
@@ -55,8 +100,21 @@ const achievements = [
 		</div>
 		<div class="mt-6 border-t border-border pt-4 text-sm">
 			<p class="font-bold">Stack</p>
-			<div class="mt-2 flex flex-wrap gap-2">
-				{stack.map((item) => <Badge label={item} />)}
+			<div class="mt-3 flex flex-col gap-3">
+				{
+					stackCategories.map((category) => (
+						<div>
+							<p class="text-xs font-semibold tracking-wide text-muted uppercase">
+								{category.label}
+							</p>
+							<div class="mt-1.5 flex flex-wrap gap-2">
+								{category.items.map((item) => (
+									<Badge label={item} />
+								))}
+							</div>
+						</div>
+					))
+				}
 			</div>
 		</div>
 	</section>
