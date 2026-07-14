@@ -3,32 +3,48 @@ title: "AI Agents for MEV Extraction on L2 Rollups"
 description: "MEV platform for EVM rollups: live mainnet liquidity-pool scanner, profitability/risk/price-impact benchmarks, and a multi-agent system (Eliza OS) orchestrating strategy execution and market analysis. Presented at BCK25, Mumbai."
 date: 2026-04-01
 repo: "https://github.com/Szczepoo13/AI-Agents-for-MEV-on-Rollups"
-tags: ["typescript", "ethers.js", "eliza-os", "docker"]
+tags: ["typescript", "ethers.js", "ai agents orchestration", "docker"]
 ---
 
 ## Overview
 
-An MEV platform for EVM rollups, built around a live mainnet liquidity-pool scanner and a
-multi-agent system (Eliza OS) that orchestrates strategy execution and market analysis.
+TODO
+<!-- A blockchain event indexing system split into two services and a database: an `indexerService`
+that consumes on-chain logs and writes decoded events into Postgres, and an `apiService` that
+exposes the indexed data over REST. -->
 
 ## Problem
 
-<!-- TODO: what motivated this project — what gap or opportunity in L2 MEV extraction was it built to address? -->
+TODO
+<!-- Querying an RPC node directly for historical or live contract events doesn't scale for
+client-facing use — every request pays the RPC round-trip, and there's no easy way to filter,
+paginate, or sort. Indexing decouples "watching the chain" from "serving queries." -->
 
 ## Approach
 
-Implemented and compared MEV strategies — cross-DEX arbitrage, sequencer spamming, sandwich
-attacks — under L2 constraints such as sequencer-controlled ordering and low-latency execution.
-The multi-agent system orchestrates the MEV bot and gathers market insights about MEV
-opportunities, with automated experiment logging and reproducible reporting (metrics collection
-plus plots/tables) to support research-grade benchmarking.
+TODO
+<!-- The indexer processes blocks in fixed-size batches (1000 blocks at a time) and only indexes up to
+a "safe" block — the chain tip minus a confirmation buffer — to reduce reorg risk. Progress is
+checkpointed in a Postgres `indexer_state` table (`lastProcessedBlock`), so the indexer resumes
+safely after a crash or restart instead of re-scanning from genesis. Duplicate events are
+prevented at the database layer with a `UNIQUE(txHash, logIndex)` constraint and
+`ON CONFLICT DO NOTHING`. RPC calls are wrapped in a retry mechanism, and a mock event generator
+lets the full pipeline be exercised without a live chain. The API service reads the indexed table
+and exposes `GET /loans` with pagination and filtering by borrower address, sorted by block number. -->
 
 ## Findings
 
-<!-- TODO: what did the benchmarking actually show? PnL, execution costs, risk figures, comparisons between strategies. -->
+TODO
+<!-- TODO: any concrete numbers or issues hit while building/running this — indexing throughput, RPC rate limits, reorg frequency on testnet, etc.? -->
+
+<!-- Working through this surfaced a few design tradeoffs worth calling out: safe-block confirmation
+depth is a direct latency/reorg-safety tradeoff, and single-writer batch indexing is simple but
+becomes the bottleneck at scale — sharding by block range or contract, and putting a queue
+(Kafka/RabbitMQ) between the indexer and the database, would be the next steps for a
+production-scale version. -->
 
 ## Outcome
 
-Quantified on-chain MEV strategy performance with systematic benchmarking of PnL, execution
-costs, and risk under realistic constraints (fees, price impact, ordering). Presented at BCK25,
-Mumbai.
+TODO
+<!-- A working end-to-end pipeline (indexer + Postgres + API) with an integration test (Supertest +
+Vitest) covering the `/loans` endpoint's response shape and status codes. -->
