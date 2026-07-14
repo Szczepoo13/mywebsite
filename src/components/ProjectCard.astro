@@ -2,6 +2,7 @@
 import Badge from "./Badge.astro";
 
 interface Props {
+	slug: string;
 	title: string;
 	description: string;
 	tags: string[];
@@ -9,7 +10,7 @@ interface Props {
 	url?: string;
 }
 
-const { title, description, tags, repo, url } = Astro.props;
+const { slug, title, description, tags, repo, url } = Astro.props;
 ---
 
 <div class="card px-5 py-4">
@@ -26,20 +27,19 @@ const { title, description, tags, repo, url } = Astro.props;
 			</ul>
 		)
 	}
-	{
-		(repo || url) && (
-			<div class="mt-3 flex gap-2 text-xs">
-				{repo && (
-					<a href={repo} class="btn-blue px-3 py-1 font-semibold" target="_blank" rel="noreferrer">
-						Repo
-					</a>
-				)}
-				{url && (
-					<a href={url} class="btn-blue px-3 py-1 font-semibold" target="_blank" rel="noreferrer">
-						Live
-					</a>
-				)}
-			</div>
-		)
-	}
+	<div class="mt-3 flex gap-2 text-xs">
+		<a href={`/projects/${slug}/`} class="btn-blue px-3 py-1 font-semibold">
+			&lt;expand&gt;
+		</a>
+		{repo && (
+			<a href={repo} class="btn-blue px-3 py-1 font-semibold" target="_blank" rel="noreferrer">
+				Repo
+			</a>
+		)}
+		{url && (
+			<a href={url} class="btn-blue px-3 py-1 font-semibold" target="_blank" rel="noreferrer">
+				Live
+			</a>
+		)}
+	</div>
 </div>

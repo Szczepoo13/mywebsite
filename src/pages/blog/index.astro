@@ -2,11 +2,15 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PostCard from "../../components/PostCard.astro";
+import ExternalPostCard from "../../components/ExternalPostCard.astro";
 import SectionWithSidebar from "../../components/SectionWithSidebar.astro";
 
-const posts = (await getCollection("blog")).sort(
-	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-);
+const posts = await getCollection("blog");
+const byDateDesc = (a: (typeof posts)[number], b: (typeof posts)[number]) =>
+	b.data.date.valueOf() - a.data.date.valueOf();
+
+const personalPosts = posts.filter((post) => post.data.source === "personal").sort(byDateDesc);
+const nextropePosts = posts.filter((post) => post.data.source === "nextrope").sort(byDateDesc);
 ---
 
 <BaseLayout title="Blog — Szczepan Gurgul">
@@ -16,15 +20,37 @@ const posts = (await getCollection("blog")).sort(
 		title="About this blog"
 		description="Notes on blockchain protocols, distributed systems, and things I'm building or reading about."
 	>
+		<div>
+			<p class="text-sm font-bold tracking-tight text-muted">Personal</p>
+			<div class="mt-2 flex flex-col gap-3">
+				{
+					personalPosts.map((post) => (
+						<PostCard
+							slug={post.id}
+							title={post.data.title}
+							description={post.data.description}
+							date={post.data.date}
+						/>
+					))
+				}
+			</div>
+		</div>
 		{
-			posts.map((post) => (
-				<PostCard
-					slug={post.id}
-					title={post.data.title}
-					description={post.data.description}
-					date={post.data.date}
-				/>
-			))
+			nextropePosts.length > 0 && (
+				<div>
+					<p class="text-sm font-bold tracking-tight text-muted">Nextrope Blog</p>
+					<div class="mt-2 flex flex-col gap-3">
+						{nextropePosts.map((post) => (
+							<ExternalPostCard
+								title={post.data.title}
+								description={post.data.description}
+								date={post.data.date}
+								externalUrl={post.data.externalUrl as string}
+							/>
+						))}
+					</div>
+				</div>
+			)
 		}
 	</SectionWithSidebar>
 </BaseLayout>

@@ -1,0 +1,56 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Badge from "../../components/Badge.astro";
+
+export async function getStaticPaths() {
+	const projects = await getCollection("projects");
+	return projects.map((project) => ({
+		params: { slug: project.id },
+		props: { project },
+	}));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+---
+
+<BaseLayout title={`${project.data.title} — Szczepan Gurgul`}>
+	<article>
+		<h1 class="text-xl font-bold tracking-tight">{project.data.title}</h1>
+		{
+			project.data.tags.length > 0 && (
+				<div class="mt-3 flex flex-wrap gap-2">
+					{project.data.tags.map((tag) => (
+						<Badge label={tag} />
+					))}
+				</div>
+			)
+		}
+		<div class="mt-3 flex gap-2 text-xs">
+			{project.data.repo && (
+				<a
+					href={project.data.repo}
+					class="btn-blue px-3 py-1 font-semibold"
+					target="_blank"
+					rel="noreferrer"
+				>
+					Repo
+				</a>
+			)}
+			{project.data.url && (
+				<a
+					href={project.data.url}
+					class="btn-blue px-3 py-1 font-semibold"
+					target="_blank"
+					rel="noreferrer"
+				>
+					Live
+				</a>
+			)}
+		</div>
+		<div class="prose prose-sm mt-6 max-w-none">
+			<Content />
+		</div>
+	</article>
+</BaseLayout>
