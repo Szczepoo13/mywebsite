@@ -1,5 +1,8 @@
 ---
 const base = import.meta.env.BASE_URL;
+const currentPath = Astro.url.pathname;
+const isHome = currentPath === base;
+
 const navLinks = [
 	{ href: `${base}projects/`, label: "Projects" },
 	{ href: `${base}blog/`, label: "Blog" },
@@ -14,14 +17,22 @@ const socialLinks = [
 	<nav class="mx-auto flex max-w-4xl items-stretch justify-between px-4">
 		<a href={base} class="block py-3 leading-tight">
 			<span class="font-mono text-sm font-bold tracking-tight text-ink">SZCZEPAN GURGUL</span>
-			<span class="block text-xs text-muted">[home]</span>
+			<span class:list={["block text-xs", isHome ? "font-semibold text-gold" : "text-muted"]}>
+				[home]
+			</span>
 		</a>
 		<div class="flex items-stretch">
 			<ul class="flex text-sm">
 				{
 					navLinks.map((link) => (
 						<li class="flex">
-							<a href={link.href} class="btn-blue flex items-center px-4 font-semibold">
+							<a
+								href={link.href}
+								class:list={[
+									"flex items-center px-4 font-semibold",
+									currentPath.startsWith(link.href) ? "btn-gold" : "btn-blue",
+								]}
+							>
 								{link.label}
 							</a>
 						</li>
