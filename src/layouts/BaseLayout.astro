@@ -5,10 +5,11 @@ import "../styles/global.css";
 
 interface Props {
 	title: string;
-	bgGrid?: boolean;
+	bgPattern?: "grid" | "dots" | "diagonal";
 }
 
-const { title, bgGrid = false } = Astro.props;
+const { title, bgPattern } = Astro.props;
+const bgClass = bgPattern ? `bg-${bgPattern}` : undefined;
 ---
 
 <html lang="en">
@@ -20,7 +21,7 @@ const { title, bgGrid = false } = Astro.props;
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>
-	<body class:list={["flex min-h-screen flex-col bg-page font-mono text-ink", { "bg-grid": bgGrid }]}>
+	<body class:list={["flex min-h-screen flex-col bg-page font-mono text-ink", bgClass]}>
 		<Navigation />
 		<main class="mx-auto w-full max-w-4xl flex-1 px-4 py-8">
 			<slot />
