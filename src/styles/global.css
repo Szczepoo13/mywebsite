@@ -13,7 +13,6 @@
 	--color-accent-blue: #3f5bf6;
 	--color-accent-blue-hover: #3349d1;
 	--color-gold: #b8860b;
-	--color-gold-hover: #966b09;
 }
 
 /* Flat modern surfaces, in the spirit of the current Curve DEX UI. */
@@ -36,13 +35,9 @@
 		background-color: var(--color-accent-blue-hover);
 	}
 
-	.btn-gold {
-		background-color: var(--color-gold);
+	.btn-blue-active {
+		background-color: var(--color-accent-blue-hover);
 		color: #fff;
-	}
-
-	.btn-gold:hover {
-		background-color: var(--color-gold-hover);
 	}
 
 	.badge-gold {
