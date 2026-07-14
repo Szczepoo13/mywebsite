@@ -9,7 +9,10 @@ interface Props {
 const { slug, title, description, date } = Astro.props;
 ---
 
-<a href={`/blog/${slug}/`} class="card block px-5 py-4 transition-colors hover:border-accent-blue">
+<a
+	href={`${import.meta.env.BASE_URL}blog/${slug}/`}
+	class="card block px-5 py-4 transition-colors hover:border-accent-blue"
+>
 	<h2 class="text-base font-bold tracking-tight">{title}</h2>
 	<time datetime={date.toISOString()} class="mt-1 block text-xs text-muted">
 		{date.toISOString().slice(0, 10)}

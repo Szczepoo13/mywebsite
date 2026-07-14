@@ -28,7 +28,7 @@ const { slug, title, description, tags, repo, url } = Astro.props;
 		)
 	}
 	<div class="mt-3 flex gap-2 text-xs">
-		<a href={`/projects/${slug}/`} class="btn-blue px-3 py-1 font-semibold">
+		<a href={`${import.meta.env.BASE_URL}projects/${slug}/`} class="btn-blue px-3 py-1 font-semibold">
 			&lt;expand&gt;
 		</a>
 		{repo && (

@@ -33,6 +33,18 @@ npm run build     # production build to dist/
 npm run preview   # preview the production build
 ```
 
+## Deployment
+
+Deployed via GitHub Actions (`.github/workflows/deploy.yml`) to GitHub Pages as a project site at
+`https://Szczepoo13.github.io/mywebsite/`. Every push to `main` triggers a build + deploy.
+
+Because this is a project site (not `Szczepoo13.github.io` itself), Astro's `base` is set to
+`/mywebsite/` in `astro.config.mjs` — every internal link in the codebase uses
+`import.meta.env.BASE_URL` rather than a hardcoded `/` so it resolves correctly under that subpath.
+
+One manual step outside this repo: in the GitHub repo's Settings → Pages, the source must be set
+to "GitHub Actions" (not "Deploy from a branch") for the workflow to publish anything.
+
 ## Roadmap
 
 Completed
@@ -46,10 +58,7 @@ Completed
 - ✅ Publications (on homepage)
 - ✅ Retro (old Curve UI) visual theme
 - ✅ Site structure simplified (Home / Blog / Projects, GitHub+LinkedIn in footer)
-
-Next
-
-- ⬜ GitHub Pages deployment
+- ✅ GitHub Pages deployment (GitHub Actions workflow)
 
 Future
 
