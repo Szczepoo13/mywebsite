@@ -1,7 +1,7 @@
 ---
-title: "Example Nextrope Post"
-description: "Placeholder - the findings summary shown here in the expanded card. Replace with real notes and point externalUrl at the actual Nextrope post."
-date: 2026-05-01
+title: "Can AI Replace Traditional Smart Contract Audits?"
+description: "Can AI replace smart contract auditors? Discover where AI excels and where experienced security researchers are still indispensable."
+date: 2026-06-02
 source: "nextrope"
-externalUrl: "https://nextrope.com/blog/"
+externalUrl: "https://nextrope.com/pl/can-ai-replace-traditional-smart-contract-audits-pl"
 ---

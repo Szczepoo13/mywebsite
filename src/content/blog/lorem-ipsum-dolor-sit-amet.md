@@ -1,6 +1,6 @@
 ---
-title: "Lorem Ipsum Dolor Sit Amet"
-description: "Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+title: "Private blog soon."
+description: "SOON"
 date: 2026-07-10
 ---
 
