@@ -35,6 +35,8 @@ const publications = defineCollection({
 		venue: z.string(),
 		date: z.coerce.date(),
 		url: z.string().url().optional(),
+		description: z.string().optional(),
+		tags: z.array(z.string()).default([]),
 	}),
 });
 

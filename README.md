@@ -1,9 +1,9 @@
 # websiteszczep
 
-Personal website of Szczepan Gurgul — blockchain researcher and software engineer.
+Personal website of Szczepan Gurgul - blockchain researcher and software engineer.
 
 Built with Astro, TypeScript, Tailwind CSS, and Markdown content collections. Styled as a technical
-engineering surface — a homage to the old Curve Finance UI (muted panel background, Windows-98-style
+engineering surface - a homage to the old Curve Finance UI (muted panel background, Windows-98-style
 outset/inset bevels, flat classic-hyperlink blue, monospace type) rather than a marketing landing page.
 Deployed to GitHub Pages.
 
@@ -22,7 +22,7 @@ live in the footer rather than a dedicated Contact page.
 ## Content
 
 Bio, Education, Stack, Projects, and Publications are real, pulled from the CV. Blog is still
-lorem-ipsum placeholder content (`src/content/blog/*.md`) — replace or delete once real posts exist.
+lorem-ipsum placeholder content (`src/content/blog/*.md`) - replace or delete once real posts exist.
 
 ## Development
 

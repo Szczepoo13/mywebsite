@@ -21,12 +21,12 @@ const stack = [
 // TODO: replace with real Uniswap v4 hook incubator details.
 const achievements = [
 	{
-		title: "BCOLN Challenge Award — Best Distributed dApp",
-		description: "Won for the Decentralized Sports Betting Platform, 2024.",
+		title: "BCOLN Challenge Award - Best Distributed dApp",
+		description: "Won the BCOLN Challenge Hackathon (2024) with a Decentralized Sports Betting Platform, competing against 10 teams from across Zurich.",
 	},
 	{
 		title: "Uniswap v4 Hook Incubator",
-		description: "TODO: add details.",
+		description: "Selected for the Uniswap v4 Hooks Incubator (Atrium Academy), protocol engineering cohort focused on designing, implementing, and testing production-ready Uniswap v4 Hooks. Cohort starts in October 2026.",
 	},
 	{
 		title: "Conference Presentations",
@@ -41,8 +41,8 @@ const achievements = [
 		<p class="mt-1 text-sm text-muted">Software &amp; Blockchain Engineer</p>
 		<p class="mt-6 max-w-2xl text-sm leading-relaxed">
 			Software engineer with blockchain expertise and a background in distributed systems. I
-			build secure, maintainable systems and tooling — from smart contracts and DeFi primitives
-			(DEX/AMM) to performance-oriented infrastructure — and have co-authored two research
+			build secure, maintainable systems and tooling - from smart contracts and DeFi primitives
+			(DEX/AMM) to performance-oriented infrastructure - and have co-authored two research
 			papers on blockchain technologies.
 		</p>
 		<div class="mt-6 border-t border-border pt-4 text-sm">
@@ -96,6 +96,16 @@ const achievements = [
 							<p class="mt-1 text-muted">
 								{publication.data.venue} · {publication.data.date.getFullYear()}
 							</p>
+							{publication.data.description && (
+								<p class="mt-2 text-muted">{publication.data.description}</p>
+							)}
+							{publication.data.tags.length > 0 && (
+								<div class="mt-2 flex flex-wrap gap-1">
+									{publication.data.tags.map((tag) => (
+										<Badge label={tag} />
+									))}
+								</div>
+							)}
 						</div>
 					))
 				}

@@ -1,6 +1,6 @@
 ---
 title: "Hello, world"
-description: "First post — placeholder to verify the blog collection renders correctly."
+description: "First post - placeholder to verify the blog collection renders correctly."
 date: 2026-07-14
 ---
 
