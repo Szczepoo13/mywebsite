@@ -113,49 +113,49 @@ const achievements = [
 				))
 			}
 		</div>
+	</section>
 
-		<div class="mt-6">
-			<h3 class="text-sm font-bold tracking-tight text-muted">Publications</h3>
-			<div class="mt-2 grid gap-2 sm:grid-cols-2">
-				{
-					publications.map((publication) => (
-						<div class="card px-3 py-2 text-xs">
-							<p class="font-bold">
-								{publication.data.url ? (
-									<a
-										href={publication.data.url}
-										class="text-accent-blue hover:underline"
-										target="_blank"
-										rel="noreferrer"
-									>
-										{publication.data.title}
-									</a>
-								) : (
-									publication.data.title
-								)}
-							</p>
-							<p class="mt-1 text-muted">
-								{publication.data.venue} · {publication.data.date.getFullYear()}
-							</p>
-							{publication.data.description && (
-								<p class="mt-2 text-muted">{publication.data.description}</p>
+	<section class="mt-6">
+		<h2 class="text-xl font-bold tracking-tight">Publications</h2>
+		<div class="mt-4 grid gap-2 sm:grid-cols-2">
+			{
+				publications.map((publication) => (
+					<div class="card px-3 py-2 text-xs">
+						<p class="font-bold">
+							{publication.data.url ? (
+								<a
+									href={publication.data.url}
+									class="text-accent-blue hover:underline"
+									target="_blank"
+									rel="noreferrer"
+								>
+									{publication.data.title}
+								</a>
+							) : (
+								publication.data.title
 							)}
-							{publication.data.highlights && (
-								<ul class="mt-2 list-disc space-y-2 pl-4 text-muted">
-									{publication.data.highlights.map((point) => <li>{point}</li>)}
-								</ul>
-							)}
-							{publication.data.tags.length > 0 && (
-								<div class="mt-2 flex flex-wrap gap-1">
-									{publication.data.tags.map((tag) => (
-										<Badge label={tag} />
-									))}
-								</div>
-							)}
-						</div>
-					))
-				}
-			</div>
+						</p>
+						<p class="mt-1 text-muted">
+							{publication.data.venue} · {publication.data.date.getFullYear()}
+						</p>
+						{publication.data.description && (
+							<p class="mt-2 text-muted">{publication.data.description}</p>
+						)}
+						{publication.data.highlights && (
+							<ul class="mt-2 list-disc space-y-2 pl-4 text-muted">
+								{publication.data.highlights.map((point) => <li>{point}</li>)}
+							</ul>
+						)}
+						{publication.data.tags.length > 0 && (
+							<div class="mt-2 flex flex-wrap gap-1">
+								{publication.data.tags.map((tag) => (
+									<Badge label={tag} />
+								))}
+							</div>
+						)}
+					</div>
+				))
+			}
 		</div>
 	</section>
 </BaseLayout>
