@@ -57,7 +57,10 @@ const achievements = [
 	},
 	{
 		title: "Conference Presentations",
-		description: "Presented research in person at BCK24 (Zürich, 2024) and BCK25 (Mumbai, 2025).",
+		highlights: [
+			"Mumbai, India 2025 — AI Agents for MEV on Rollups (BCK25)",
+			"Zürich, Switzerland 2024 — Scaling DeFi with ZK Rollups (BCK24)",
+		],
 	},
 ];
 ---
@@ -108,7 +111,14 @@ const achievements = [
 				achievements.map((achievement) => (
 					<div class="card px-5 py-4">
 						<h3 class="text-base font-bold tracking-tight">{achievement.title}</h3>
-						<p class="mt-2 text-sm text-muted">{achievement.description}</p>
+						{achievement.description && (
+							<p class="mt-2 text-sm text-muted">{achievement.description}</p>
+						)}
+						{achievement.highlights && (
+							<ul class="mt-2 list-disc space-y-2 pl-4 text-sm text-muted">
+								{achievement.highlights.map((point) => <li>{point}</li>)}
+							</ul>
+						)}
 					</div>
 				))
 			}
