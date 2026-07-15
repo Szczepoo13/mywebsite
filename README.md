@@ -23,3 +23,9 @@ npm run dev       # start dev server
 npm run build     # production build to dist/
 npm run preview   # preview the production build
 ```
+
+## Deployment
+
+Deployed via GitHub Actions (`.github/workflows/deploy.yml`) to GitHub Pages on every push to
+`main`, served at the custom domain `sgurgul.dev` (`public/CNAME`). No `base` path needed since
+this is the domain root, not a subpath.
