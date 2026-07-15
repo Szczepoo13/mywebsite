@@ -4,6 +4,7 @@ description: "dApp with a Node.js backend for API handling and database manageme
 date: 2024-06-01
 repo: "https://github.com/Szczepoo13/Decentralized-Sports-Betting"
 tags: ["javascript", "node.js", "solidity", "chainlink"]
+order: 1
 ---
 
 ## Overview

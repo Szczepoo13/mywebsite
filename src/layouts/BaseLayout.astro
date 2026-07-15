@@ -6,9 +6,10 @@ import "../styles/global.css";
 interface Props {
 	title: string;
 	bgPattern?: "grid" | "dots" | "diagonal";
+	wide?: boolean;
 }
 
-const { title, bgPattern } = Astro.props;
+const { title, bgPattern, wide } = Astro.props;
 const bgClass = bgPattern ? `bg-${bgPattern}` : undefined;
 ---
 
@@ -23,7 +24,7 @@ const bgClass = bgPattern ? `bg-${bgPattern}` : undefined;
 	</head>
 	<body class:list={["flex min-h-screen flex-col bg-page font-mono text-ink", bgClass]}>
 		<Navigation />
-		<main class="mx-auto w-full max-w-4xl flex-1 px-4 py-8">
+		<main class:list={["mx-auto w-full flex-1 px-4 py-8", wide ? "max-w-6xl" : "max-w-4xl"]}>
 			<slot />
 		</main>
 		<Footer />

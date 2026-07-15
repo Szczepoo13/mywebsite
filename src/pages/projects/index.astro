@@ -1,32 +1,84 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import ProjectCard from "../../components/ProjectCard.astro";
-import SectionWithSidebar from "../../components/SectionWithSidebar.astro";
+import ProjectGroup from "../../components/ProjectGroup.astro";
 
 const projects = (await getCollection("projects")).sort(
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
+
+const toGroupedProject = (project: (typeof projects)[number]) => ({
+	slug: project.id,
+	title: project.data.title,
+	description: project.data.description,
+	tags: project.data.tags,
+	repo: project.data.repo,
+});
+
+// Within a box, an explicit `order` wins; projects without one keep their
+// relative (date-sorted) position after the ordered ones.
+const byOrder = (a: (typeof projects)[number], b: (typeof projects)[number]) => {
+	if (a.data.order != null && b.data.order != null) return a.data.order - b.data.order;
+	if (a.data.order != null) return -1;
+	if (b.data.order != null) return 1;
+	return 0;
+};
+
+// Projects sharing the same `researchPaper` value are shown together in one
+// box, each with a link to the paper the title points to.
+const researchGroups = new Map<string, { url?: string; projects: typeof projects }>();
+for (const project of projects) {
+	if (!project.data.researchPaper) continue;
+	const group = researchGroups.get(project.data.researchPaper) ?? {
+		url: project.data.researchPaperUrl,
+		projects: [],
+	};
+	group.projects.push(project);
+	researchGroups.set(project.data.researchPaper, group);
+}
+for (const group of researchGroups.values()) {
+	group.projects.sort(byOrder);
+}
+
+// Everything else falls into a single "Personal Projects" box.
+const personalProjects = projects.filter((project) => !project.data.researchPaper).sort(byOrder);
+
+// Fuller research-paper boxes lead, "Personal Projects" sits in the middle,
+// and single-project paper boxes (which render narrow) trail at the end.
+const allResearchGroups = [...researchGroups.entries()];
+const leadingResearchGroups = allResearchGroups.filter(([, group]) => group.projects.length > 1);
+const trailingResearchGroups = allResearchGroups.filter(([, group]) => group.projects.length === 1);
 ---
 
-<BaseLayout title="Projects — Szczepan Gurgul" bgPattern="dots">
+<BaseLayout title="Projects — Szczepan Gurgul" bgPattern="dots" wide>
 	<h1 class="text-xl font-bold tracking-tight">Projects</h1>
-	<!-- TODO: replace with real "about these projects" copy. -->
-	<SectionWithSidebar
-		title="About these projects"
-		description="A collection of research-driven projects and engineering experiments. Includes implementations from published papers alongside personal tools for blockchain infrastructure and data engineering."
-	>
-		{
-			projects.map((project) => (
-				<ProjectCard
-					slug={project.id}
-					title={project.data.title}
-					description={project.data.description}
-					tags={project.data.tags}
-					repo={project.data.repo}
-					url={project.data.url}
-				/>
-			))
-		}
-	</SectionWithSidebar>
+	<div class="card mt-6 px-6 py-6">
+		<div class="flex flex-col gap-6">
+			{
+				leadingResearchGroups.map(([paperTitle, group]) => (
+					<ProjectGroup
+						kicker="Research Paper"
+						title={paperTitle}
+						titleUrl={group.url}
+						projects={group.projects.map(toGroupedProject)}
+					/>
+				))
+			}
+			{
+				personalProjects.length > 0 && (
+					<ProjectGroup title="Personal Projects" projects={personalProjects.map(toGroupedProject)} />
+				)
+			}
+			{
+				trailingResearchGroups.map(([paperTitle, group]) => (
+					<ProjectGroup
+						kicker="Research Paper"
+						title={paperTitle}
+						titleUrl={group.url}
+						projects={group.projects.map(toGroupedProject)}
+					/>
+				))
+			}
+		</div>
+	</div>
 </BaseLayout>

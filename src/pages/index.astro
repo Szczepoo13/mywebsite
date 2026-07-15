@@ -66,7 +66,7 @@ const achievements = [
 ---
 
 <BaseLayout title="Szczepan Gurgul" bgPattern="grid">
-	<section class="card px-6 py-8">
+	<section class="card-3d bg-surface px-6 py-8">
 		<h1 class="text-2xl font-bold tracking-tight">Szczepan Gurgul</h1>
 		<p class="mt-1 text-sm text-muted">Software &amp; Blockchain Engineer</p>
 		<p class="mt-6 max-w-2xl text-sm leading-relaxed">
@@ -109,7 +109,7 @@ const achievements = [
 		<div class="mt-4 flex flex-col gap-3">
 			{
 				achievements.map((achievement) => (
-					<div class="card px-5 py-4">
+					<div class="card-3d bg-surface px-5 py-4">
 						<h3 class="text-base font-bold tracking-tight">{achievement.title}</h3>
 						{achievement.description && (
 							<p class="mt-2 text-sm text-muted">{achievement.description}</p>
@@ -130,7 +130,7 @@ const achievements = [
 		<div class="mt-4 grid gap-2 sm:grid-cols-2">
 			{
 				publications.map((publication) => (
-					<div class="card px-3 py-2 text-xs">
+					<div class="card-3d bg-surface px-3 py-2 text-xs">
 						<p class="text-base font-bold tracking-tight">
 							{publication.data.url ? (
 								<a

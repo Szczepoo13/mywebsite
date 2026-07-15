@@ -4,6 +4,8 @@ description: "Stress-testing setup for a local zkSync chain using Uniswap V2 tok
 date: 2024-11-01
 repo: "https://github.com/Szczepoo13/zkSync-TPS-Benchmark"
 tags: ["python","amm","zero-knowledge","solidity"]
+researchPaper: "Scaling DeFi with ZK Rollups: Design, Deployment, and Evaluation of a Real-Time Proof-of-Concept"
+researchPaperUrl: "https://arxiv.org/html/2506.00500v1"
 ---
 
 ## Overview

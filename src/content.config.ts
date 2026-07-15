@@ -24,6 +24,16 @@ const projects = defineCollection({
 		repo: z.string().url().optional(),
 		url: z.string().url().optional(),
 		tags: z.array(z.string()).default([]),
+		// When set, groups this project with others sharing the same value into
+		// a single "Research Paper" box on the projects index, instead of it
+		// appearing as a standalone card.
+		researchPaper: z.string().optional(),
+		// Optional link (e.g. arXiv) the research paper's title points to.
+		researchPaperUrl: z.string().url().optional(),
+		// Overrides date-based sorting within a project's group/box on the
+		// projects index. Lower numbers come first; unset projects keep their
+		// date-sorted position after any ordered ones.
+		order: z.number().optional(),
 	}),
 });
 

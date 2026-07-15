@@ -22,6 +22,14 @@
 		border: 2px solid var(--color-border);
 	}
 
+	/* Old-school raised look with a hard offset shadow, no blur — e.g. Curve's
+	   filter buttons. */
+	.card-3d {
+		background-color: var(--color-surface-alt);
+		border: 2px solid var(--color-ink);
+		box-shadow: 4px 4px 0 var(--color-ink);
+	}
+
 	.bar {
 		background-color: var(--color-surface-alt);
 	}

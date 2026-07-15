@@ -4,6 +4,7 @@ description: "A blockchain event indexing system split into an indexer service (
 date: 2024-01-01
 repo: "https://github.com/Szczepoo13/Ethereum-Event-Indexer"
 tags: ["typescript", "postgresql", "ethers.js", "docker"]
+order: 2
 ---
 
 ## Overview
