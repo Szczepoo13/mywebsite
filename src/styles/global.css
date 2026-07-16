@@ -48,6 +48,40 @@
 		color: #fff;
 	}
 
+	/* Same raised look as .card-3d, plus a press-down interaction so it reads
+	   as clickable: hover nudges it toward the surface, active flattens it. */
+	.btn-3d {
+		border: 2px solid var(--color-ink);
+		box-shadow: 3px 3px 0 var(--color-ink);
+		transition:
+			transform 0.08s ease-out,
+			box-shadow 0.08s ease-out;
+	}
+
+	.btn-3d:hover {
+		transform: translate(1px, 1px);
+		box-shadow: 2px 2px 0 var(--color-ink);
+	}
+
+	.btn-3d:active {
+		transform: translate(3px, 3px);
+		box-shadow: 0 0 0 var(--color-ink);
+	}
+
+	/* Lighter-weight press feedback for elements that shouldn't get the full
+	   bordered/shadowed .btn-3d treatment — e.g. flush nav tabs. */
+	.btn-press {
+		transition: transform 0.08s ease-out;
+	}
+
+	.btn-press:hover {
+		transform: translateY(1px);
+	}
+
+	.btn-press:active {
+		transform: translateY(2px);
+	}
+
 	.badge-gold {
 		background-color: var(--color-surface);
 		border: 1px solid var(--color-gold);
