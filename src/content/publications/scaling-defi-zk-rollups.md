@@ -1,9 +1,9 @@
 ---
 title: "Scaling DeFi with ZK Rollups"
 authors: "Krzysztof M. Gogol, Szczepan Gurgul, Faizan Nehal Siddiqui, David Branes, Claudio J. Tessone"
-venue: "arXiv (preprint)"
+venue: "IEEE Xplore"
 date: 2025-01-01
-url: "https://arxiv.org/html/2506.00500v1"
+url: "https://ieeexplore.ieee.org/abstract/document/11466501"
 highlights:
   - "Deployed a private ZK rollup including sequencer and prover on zkSync (Elastic Chain stack)"
   - "Forked Uniswap V2 as the AMM under test"
