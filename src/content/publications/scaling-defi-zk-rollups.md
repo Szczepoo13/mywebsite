@@ -1,7 +1,7 @@
 ---
 title: "Scaling DeFi with ZK Rollups"
 authors: "Krzysztof M. Gogol, Szczepan Gurgul, Faizan Nehal Siddiqui, David Branes, Claudio J. Tessone"
-venue: "IEEE Xplore"
+venue: "2025 IEEE International Conference on Distributed Ledger Technologies (ICDLT)"
 date: 2025-01-01
 url: "https://ieeexplore.ieee.org/abstract/document/11466501"
 highlights:
