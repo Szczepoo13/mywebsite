@@ -114,3 +114,37 @@
 		);
 	}
 }
+
+/* Typography plugin defaults body/bullet text to gray-700, reading as light
+   gray on our theme — darken to ink and open up line spacing for readability.
+   Lives in @layer utilities so it wins over the plugin's own @layer components
+   rule regardless of source order. */
+@layer utilities {
+	.prose {
+		--tw-prose-body: var(--color-ink);
+		--tw-prose-bullets: var(--color-ink);
+		--tw-prose-counters: var(--color-ink);
+		line-height: 1.85;
+	}
+
+	/* Content images vary wildly in native resolution (screenshots vs. exported
+	   charts) — normalize them to a moderate, consistent size instead of
+	   rendering at native size (too small) or stretching to the full column
+	   (too big for diagrams/charts that aren't meant to dominate the page). */
+	.prose img {
+		width: 100%;
+		max-width: 32rem;
+		height: auto;
+		display: block;
+		margin-inline: auto;
+	}
+
+	/* Typography plugin defaults tables to width:100%, which stretches a
+	   compact data table (like our 4-column results table) across the whole
+	   column — size it to its content instead. */
+	.prose table {
+		width: auto;
+		max-width: 100%;
+		margin-inline: auto;
+	}
+}
