@@ -3,49 +3,89 @@ title: "Decentralized Sports Betting Platform"
 description: "dApp with a Node.js backend for API handling and database management. Integrated Chainlink Oracles for real-time odds and outcomes, with end-to-end flow testing. Won the BCOLN Challenge Award for Best Distributed dApp, 2024."
 date: 2024-06-01
 repo: "https://github.com/Szczepoo13/Decentralized-Sports-Betting"
-tags: ["javascript", "node.js", "solidity", "chainlink"]
+tags: ["solidity", "chainlink", "svelte", "node.js"]
 order: 1
 ---
 
 ## Overview
 
-TODO
-<!-- A blockchain event indexing system split into two services and a database: an `indexerService`
-that consumes on-chain logs and writes decoded events into Postgres, and an `apiService` that
-exposes the indexed data over REST. -->
+A dApp for betting on real sports match outcomes, settled on-chain against real-world odds and
+results pulled in through a Chainlink oracle rather than a centralized bookmaker.
+
+![On-chain smart contracts, a Chainlink node and external adapter for oracle data, a Postgres-backed backend, and a Svelte/MetaMask frontend](betting-architecture.png)
+<p class="-mt-4 text-center text-xs text-muted">On-chain betting contracts talk to a Chainlink oracle node; the node's external adapter reads match odds and results from Postgres. The Svelte frontend (via MetaMask) and a Node.js backend handle placing bets and refreshing odds.</p>
 
 ## Problem
 
-TODO
-<!-- Querying an RPC node directly for historical or live contract events doesn't scale for
-client-facing use — every request pays the RPC round-trip, and there's no easy way to filter,
-paginate, or sort. Indexing decouples "watching the chain" from "serving queries." -->
+Settling a bet on-chain needs a source of truth for match odds and results that neither side can
+manipulate, and a payout that can't quietly favor the house. A single bookmaker's odds can also be
+skewed by one outlier price. The contract itself has no way to know who won a match; it needs
+real-world data delivered in a way it can trust.
 
 ## Approach
 
-TODO
-<!-- The indexer processes blocks in fixed-size batches (1000 blocks at a time) and only indexes up to
-a "safe" block — the chain tip minus a confirmation buffer — to reduce reorg risk. Progress is
-checkpointed in a Postgres `indexer_state` table (`lastProcessedBlock`), so the indexer resumes
-safely after a crash or restart instead of re-scanning from genesis. Duplicate events are
-prevented at the database layer with a `UNIQUE(txHash, logIndex)` constraint and
-`ON CONFLICT DO NOTHING`. RPC calls are wrapped in a retry mechanism, and a mock event generator
-lets the full pipeline be exercised without a live chain. The API service reads the indexed table
-and exposes `GET /loans` with pagination and filtering by borrower address, sorted by block number. -->
+- `BettingContract.sol` (Solidity, OpenZeppelin `AccessControl` + `ReentrancyGuard`) holds bets per
+  match, caps bet size, blocks a second bet on the same match from the same address, and gates
+  payouts to an `ORACLE_ROLE`.
+- Odds are pulled from [the-odds-api.com](https://the-odds-api.com/), averaged per outcome across
+  bookmakers, and outliers (any single bookmaker's odds over 15) are excluded from the average so
+  one mispriced line can't skew the payout odds. Matches, scores, and odds are stored in Postgres
+  via Sequelize models (`Match`, `Score`, `Bookmaker`, `Market`, `Outcome`).
+- Match outcomes reach the contract through a real Chainlink oracle flow: `FetchFromDB.sol` fires a
+  direct-request job, a Chainlink node picks it up and calls a Node.js external adapter, the
+  adapter reads completed matches straight from Postgres and works out the winner by comparing
+  each team's score, and the encoded result is delivered back on-chain to `fulfill()`, which then
+  forwards it into `BettingContract.notifyMatchWinners()`:
+
+  ```solidity
+  function requestCompletedMatches() public onlyOwner returns (bytes32 requestId) {
+      Chainlink.Request memory req = buildChainlinkRequest(
+          jobId,
+          address(this),
+          this.fulfill.selector
+      );
+      return sendChainlinkRequest(req, fee);
+  }
+
+  function fulfill(
+      bytes32 _requestId,
+      string[] memory _matchIds,
+      uint8[] memory _outcomes
+  ) public recordChainlinkFulfillment(_requestId) {
+      require(_matchIds.length == _outcomes.length, "Mismatched array lengths");
+      delete matchOutcomes;
+
+      for (uint256 i = 0; i < _matchIds.length; i++) {
+          if (!notifiedMatches[_matchIds[i]]) {
+              matchOutcomes.push(MatchOutcome({
+                  matchId: _matchIds[i],
+                  winningOutcome: _outcomes[i]
+              }));
+          }
+      }
+      emit RequestCompletedMatches(_requestId, matchOutcomes);
+  }
+  ```
+- `distributeWinnings()` splits the pot proportionally by each bet's locked-in odds, deducts a
+  configurable tax (5% by default), and pays winners directly in the same transaction.
+- Svelte frontend, MetaMask for wallet connection, and a small Node/Express backend for refreshing
+  odds and submitting the `requestBet`/`notifyMatchWinners` transactions.
 
 ## Findings
 
-TODO
-<!-- TODO: any concrete numbers or issues hit while building/running this — indexing throughput, RPC rate limits, reorg frequency on testnet, etc.? -->
-
-<!-- Working through this surfaced a few design tradeoffs worth calling out: safe-block confirmation
-depth is a direct latency/reorg-safety tradeoff, and single-writer batch indexing is simple but
-becomes the bottleneck at scale — sharding by block range or contract, and putting a queue
-(Kafka/RabbitMQ) between the indexer and the database, would be the next steps for a
-production-scale version. -->
+- `distributeWinnings()` pays every winner with `.transfer()` inside a loop and no try/catch, so if
+  even one winner is a contract whose `receive()` reverts, the whole payout for that match reverts
+  and nobody gets paid until it's resolved. A pull-based withdrawal pattern (winners claim their
+  own payout) would avoid that single point of failure.
+- There are two separate paths to trigger `notifyMatchWinners()`: the actual Chainlink oracle flow
+  above, and a plain backend script that signs the same transaction with a hot wallet key via
+  web3.js. The second one is a convenient shortcut for local development, but it quietly
+  re-centralizes the exact trust the oracle path exists to remove.
+- One bet per address per match is enforced on-chain (`userHasBetOnMatch`), which is simple but
+  means no adding to a position or partial cash-out once a bet is placed.
 
 ## Outcome
 
-TODO
-<!-- A working end-to-end pipeline (indexer + Postgres + API) with an integration test (Supertest +
-Vitest) covering the `/loans` endpoint's response shape and status codes. -->
+A working end-to-end flow, place a bet in the Svelte app, have real match results reach the
+contract through an actual Chainlink oracle round-trip, and get paid out automatically, that won
+the BCOLN Challenge Award for Best Distributed dApp, 2024.

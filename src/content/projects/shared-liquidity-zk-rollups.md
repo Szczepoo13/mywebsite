@@ -45,7 +45,17 @@ that reflects that.
   swaps apiece via `swapExactTokensForTokens`, for 1,000 transactions per run.
 - Ran up to 5 generator instances in parallel, each bound to a distinct IP (via `iptables`) to
   emulate distributed traffic and avoid a single RPC endpoint becoming the bottleneck, talking to
-  the node over a WebSocket (port 3051) instead of HTTP to cut round-trip overhead.
+  the node over a WebSocket (port 3051) instead of HTTP to cut round-trip overhead:
+
+  ```python
+  async def _send_transaction(self, ws, signed_tx, nonce):
+      json_request = request_to_json(
+          "eth_sendRawTransaction", [signed_tx.rawTransaction.hex()], request_id=self.request_id
+      )
+      await ws.send(json.dumps(json_request))
+      self.nonce_by_request_id[self.request_id] = nonce
+      self.request_id += 1
+  ```
 - Logged every tx hash and sender per instance, merged the logs, and wrote a blockchain parser that
   batch-queries the chain for inclusion block, timestamp, and block size so send-time and
   inclusion-time could be joined for latency analysis.
