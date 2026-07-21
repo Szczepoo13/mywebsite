@@ -139,6 +139,14 @@
 		margin-inline: auto;
 	}
 
+	/* One-off: the full MEV system pipeline diagram is too dense to read at the
+	   default cap, so let it use the whole column width. Targeted by alt text
+	   since a single markdown image has no other hook to style individually. */
+	.prose img[alt^="Three-layer MEV research bot"] {
+		max-width: 100%;
+		cursor: zoom-in;
+	}
+
 	/* Typography plugin defaults tables to width:100%, which stretches a
 	   compact data table (like our 4-column results table) across the whole
 	   column — size it to its content instead. */

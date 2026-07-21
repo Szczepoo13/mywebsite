@@ -28,8 +28,8 @@ that reflects that.
 
 ## Approach
 
-![Two zkSync L2 chains, each with its own sequencer and prover, connected by a Hyperbridge contract; only one chain runs Uniswap V2, both settle batches and proofs to Ethereum L1](architecture-diagram.png)
-<p class="-mt-4 text-center text-xs text-muted">Two independent zkSync chains, each with its own sequencer and prover, linked by a Hyperbridge contract for cross-rollup liquidity. Only one chain runs the forked Uniswap V2 deployment; both settle batches and validity proofs to Ethereum L1.</p>
+<a href="/images/shared-liquidity-architecture.png" target="_blank" rel="noreferrer">![Two zkSync L2 chains, each with its own sequencer and prover, connected by a Hyperbridge contract; only one chain runs Uniswap V2, both settle batches and proofs to Ethereum L1](architecture-diagram.png)</a>
+<p class="-mt-4 text-center text-xs text-muted">Click to open full size. Two independent zkSync chains, each with its own sequencer and prover, linked by a Hyperbridge contract for cross-rollup liquidity. Only one chain runs the forked Uniswap V2 deployment; both settle batches and validity proofs to Ethereum L1.</p>
 
 - Deployed two independent zkSync chains from the Elastic Chain codebase (not a fork of the public
   zkSync network, but separate genesis blocks, each with its own sequencer, prover, and Reth execution
