@@ -44,6 +44,9 @@ const { Content } = await render(project);
 			)
 		}
 		<div class="mt-3 flex gap-2 text-xs">
+			<a href={`${import.meta.env.BASE_URL}projects/`} class="btn-blue btn-3d px-3 py-1 font-semibold">
+				← Back to Projects
+			</a>
 			{project.data.repo && (
 				<a
 					href={project.data.repo}
