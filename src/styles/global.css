@@ -30,6 +30,19 @@
 		box-shadow: 4px 4px 0 var(--color-ink);
 	}
 
+	@media (prefers-reduced-motion: no-preference) {
+		.card-3d {
+			transition:
+				transform 0.15s ease-out,
+				box-shadow 0.15s ease-out;
+		}
+
+		.card-3d:hover {
+			transform: translate(-3px, -3px);
+			box-shadow: 7px 7px 0 var(--color-ink);
+		}
+	}
+
 	.bar {
 		background-color: var(--color-surface-alt);
 	}
@@ -112,6 +125,40 @@
 			transparent 1px,
 			transparent 14px
 		);
+	}
+
+	/* Slow background-pattern drift. Each shift equals exactly one tile so the
+	   loop point is seamless; magnitude tuned per pattern's own repeat unit. */
+	@media (prefers-reduced-motion: no-preference) {
+		.bg-grid {
+			animation: bg-drift-grid 24s linear infinite;
+		}
+
+		.bg-dots {
+			animation: bg-drift-dots 24s linear infinite;
+		}
+
+		.bg-diagonal {
+			animation: bg-drift-diagonal 24s linear infinite;
+		}
+	}
+
+	@keyframes bg-drift-grid {
+		to {
+			background-position: 14px 14px;
+		}
+	}
+
+	@keyframes bg-drift-dots {
+		to {
+			background-position: 16px 16px;
+		}
+	}
+
+	@keyframes bg-drift-diagonal {
+		to {
+			background-position: 9.9px -9.9px;
+		}
 	}
 }
 

@@ -27,10 +27,7 @@ const stackCategories = [
 	{
 		label: "Software Engineering",
 		items: [
-			"git",
 			"tdd",
-			"scrum",
-			"rest apis",
 			"linux",
 			"sql",
 			"k8s",
@@ -48,19 +45,24 @@ const stackCategories = [
 // TODO: replace with real Uniswap v4 hook incubator details.
 const achievements = [
 	{
-		title: "BCOLN Challenge Award - Best Distributed dApp",
-		description: "Won the BCOLN Challenge Hackathon (2024) with a Decentralized Sports Betting Platform, competing against 10 teams from across Zurich.",
+		title: "🎓 Graduated with Honors (Magna Cum Laude)",
+		description:
+			"University of Zürich — M.Sc. Informatics (2026). Graduated magna cum laude for academic excellence.",
 	},
 	{
-		title: "Uniswap v4 Hook Incubator",
-		description: "Selected for the Uniswap v4 Hooks Incubator (Atrium Academy), protocol engineering cohort focused on designing, implementing, and testing production-ready Uniswap v4 Hooks. Cohort starts in October 2026.",
+	title: "📄 2 Research Papers & 2 International Conference Presentations",
+	description:
+		"Co-authored two blockchain research papers on AI agents for MEV and ZK rollups. Presented the work at international conferences in Zürich, Switzerland (BCK24) and Mumbai, India (BCK25).",
 	},
 	{
-		title: "Conference Presentations",
-		highlights: [
-			"Mumbai, India 2025 - AI Agents for MEV on Rollups (BCK25)",
-			"Zürich, Switzerland 2024 - Scaling DeFi with ZK Rollups (BCK24)",
-		],
+		title: "🦄 Uniswap v4 Hooks Incubator",
+		description:
+			"Selected for the Uniswap v4 Hooks Incubator (Atrium Academy), protocol engineering cohort focused on designing, implementing, and testing production-ready Uniswap v4 Hooks. Cohort starts in October 2026.",
+	},
+	{
+		title: "🏆 BCOLN Challenge Award — Best Distributed dApp",
+		description:
+			"Winner of the BCOLN Challenge Hackathon (2024) for building a decentralized sports betting platform, competing against 10 teams across Zürich.",
 	},
 ];
 ---
@@ -68,11 +70,14 @@ const achievements = [
 <BaseLayout title="Szczepan Gurgul" bgPattern="grid">
 	<section class="card-3d bg-surface px-6 py-8">
 		<h1 class="text-2xl font-bold tracking-tight">Szczepan Gurgul</h1>
-		<p class="mt-1 text-sm text-muted">Software &amp; Blockchain Engineer</p>
+		<p class="mt-1 text-sm text-muted">AI × Blockchain Engineer</p>
+		<p class="mt-1 text-xs font-medium tracking-wide text-muted uppercase">
+			Distributed Systems • Protocol Engineering • AI Agents
+		</p>
 		<p class="mt-6 max-w-2xl text-sm leading-relaxed">
-			Software engineer with blockchain expertise and a background in distributed systems. I
+			Software engineer specializing in distributed systems, blockchain infrastructure, and AI agents. I
 			build secure, maintainable systems and tooling - from smart contracts and DeFi primitives
-			(DEX/AMM) to performance-oriented infrastructure. Currently working as an AI × Blockchain
+		    to performance-oriented infrastructure. Currently working as an AI × Blockchain
 			Engineer @ Nextrope, building AI agent workflows for smart contract security analysis and
 			EVM bytecode auditing.
 		</p>
@@ -105,7 +110,7 @@ const achievements = [
 	</section>
 
 	<section class="mt-6">
-		<h2 class="text-xl font-bold tracking-tight">Achievements</h2>
+		<h2 class="text-xl font-bold tracking-tight">Selected Achievements</h2>
 		<div class="mt-4 flex flex-col gap-3">
 			{
 				achievements.map((achievement) => (
