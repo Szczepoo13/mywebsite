@@ -15,22 +15,22 @@ const socialLinks = [
 ---
 
 <header class="bar border-b-2 border-border">
-	<nav class="mx-auto flex max-w-4xl items-stretch justify-between px-4">
-		<a href={base} class="btn-press block py-3 leading-tight">
+	<nav class="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-2">
+		<a href={base} class="btn-press block leading-tight">
 			<span class="font-mono text-sm font-bold tracking-tight text-ink">SZCZEPAN GURGUL</span>
 			<span class:list={["block text-xs", isHome ? "font-semibold text-gold" : "text-muted"]}>
 				[home]
 			</span>
 		</a>
-		<div class="flex items-stretch">
-			<ul class="flex text-sm">
+		<div class="flex flex-wrap items-center gap-2">
+			<ul class="flex flex-wrap text-sm">
 				{
 					navLinks.map((link) => (
 						<li class="flex">
 							<a
 								href={link.href}
 								class:list={[
-									"flex items-center px-4 font-semibold btn-press",
+									"flex items-center px-4 py-1 font-semibold btn-press",
 									currentPath.startsWith(link.href) ? "btn-blue-active" : "btn-blue",
 								]}
 							>
@@ -40,7 +40,7 @@ const socialLinks = [
 					))
 				}
 			</ul>
-			<ul class="ml-4 flex list-none items-center gap-4 self-center text-sm">
+			<ul class="flex list-none flex-wrap items-center gap-4 text-sm">
 				{
 					socialLinks.map((link) => (
 						<li>
