@@ -43,41 +43,31 @@ for (const group of researchGroups.values()) {
 // Everything else falls into a single "Personal Projects" box.
 const personalProjects = projects.filter((project) => !project.data.researchPaper).sort(byOrder);
 
-// Fuller research-paper boxes lead, "Personal Projects" sits in the middle,
-// and single-project paper boxes (which render narrow) trail at the end.
+// Research-paper boxes all lead (in the order their newest project was
+// last worked on), with "Personal Projects" trailing at the end.
 const allResearchGroups = [...researchGroups.entries()];
-const leadingResearchGroups = allResearchGroups.filter(([, group]) => group.projects.length > 1);
-const trailingResearchGroups = allResearchGroups.filter(([, group]) => group.projects.length === 1);
 ---
 
 <BaseLayout title="Projects - Szczepan Gurgul" bgPattern="dots" wide>
 	<h1 class="text-xl font-bold tracking-tight">Projects</h1>
 	<div class="card mt-6 px-6 py-6">
 		<div class="flex flex-col gap-6">
-			{
-				leadingResearchGroups.map(([paperTitle, group]) => (
-					<ProjectGroup
-						kicker="Research Paper"
-						title={paperTitle}
-						titleUrl={group.url}
-						projects={group.projects.map(toGroupedProject)}
-					/>
-				))
-			}
+			<div class="flex flex-wrap gap-6">
+				{
+					allResearchGroups.map(([paperTitle, group]) => (
+						<ProjectGroup
+							kicker="Research Paper"
+							title={paperTitle}
+							titleUrl={group.url}
+							projects={group.projects.map(toGroupedProject)}
+						/>
+					))
+				}
+			</div>
 			{
 				personalProjects.length > 0 && (
 					<ProjectGroup title="Personal Projects" projects={personalProjects.map(toGroupedProject)} />
 				)
-			}
-			{
-				trailingResearchGroups.map(([paperTitle, group]) => (
-					<ProjectGroup
-						kicker="Research Paper"
-						title={paperTitle}
-						titleUrl={group.url}
-						projects={group.projects.map(toGroupedProject)}
-					/>
-				))
 			}
 		</div>
 	</div>

@@ -18,14 +18,28 @@ interface Props {
 
 const { kicker, title, titleUrl, projects } = Astro.props;
 
-// A box only holds as many grid columns as it has projects, so a
-// one- or two-project group doesn't stretch full-width with empty space.
-const widthClass = projects.length === 1 ? "max-w-sm" : projects.length === 2 ? "max-w-2xl" : "";
-const gridColsClass =
-	projects.length === 1 ? "" : projects.length === 2 ? "sm:grid-cols-2" : "sm:grid-cols-2 xl:grid-cols-3";
+// Every card is a fixed width and shares a minimum height so cards look
+// identical across boxes, no matter how many projects are in a given
+// group. Cards that share a row auto-stretch to match each other's height,
+// but a card alone in its own box (nothing to stretch against) would
+// otherwise size to its own shorter content, hence the explicit min-height.
+const CARD_SIZE = "w-[328px] min-h-[352px]";
+// A two-card box is capped to exactly fit its cards side by side instead of
+// stretching full-width with empty space (computed, not `w-fit`, since
+// `fit-content` sizing also factors in the box's own title text, which
+// blows the width back out for long research-paper titles). A one-card box
+// instead grows to fill whatever room is left in its row, so it still lines
+// up with the wider boxes instead of leaving a gap next to them.
+const CARD_PX = 328;
+const GAP_PX = 16;
+const PAD_PX = 48; // px-6 on both sides
+const BORDER_PX = 4; // .card's own 2px border, both sides
+const boxWidthPx = projects.length * CARD_PX + (projects.length - 1) * GAP_PX + PAD_PX + BORDER_PX;
+const boxStyle = projects.length === 2 ? { width: `${boxWidthPx}px` } : undefined;
+const growContent = projects.length === 1;
 ---
 
-<div class:list={["card border-t-4 border-t-gold px-6 py-6", widthClass]}>
+<div class:list={["card border-t-4 border-t-gold px-6 py-6", growContent && "flex-1"]} style={boxStyle}>
 	{kicker && <p class="text-xs font-bold tracking-wide text-gold uppercase">{kicker}</p>}
 	<h2 class:list={["text-base font-bold tracking-tight", kicker && "mt-1"]}>
 		{
@@ -38,10 +52,10 @@ const gridColsClass =
 			)
 		}
 	</h2>
-	<div class:list={["mt-4 grid gap-4", gridColsClass]}>
+	<div class="mt-4 flex flex-wrap gap-4">
 		{
 			projects.map((project) => (
-				<div class="card-3d px-4 py-4">
+				<div class:list={["card-3d px-4 py-4", CARD_SIZE]}>
 					<h3 class="text-sm font-bold">{project.title}</h3>
 					<p class="mt-2 text-xs text-muted">{project.description}</p>
 					{project.tags.length > 0 && (

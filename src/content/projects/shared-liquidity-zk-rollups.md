@@ -4,7 +4,7 @@ description: "Two local zkSync chains connected by a hyperbridge, with Uniswap V
 date: 2024-11-01
 repo: "https://github.com/Szczepoo13/zkSync-TPS-Benchmark"
 tags: ["python","solidity","rust","zero-knowledge","docker","grafana"]
-researchPaper: "Scaling DeFi with ZK Rollups: Design, Deployment, and Evaluation of a Real-Time Proof-of-Concept"
+researchPaper: "Scaling DeFi with ZK Rollups"
 researchPaperUrl: "https://ieeexplore.ieee.org/abstract/document/11466501"
 ---
 

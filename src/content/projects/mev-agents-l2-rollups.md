@@ -1,9 +1,9 @@
 ---
-title: "AI Agents for MEV Extraction on L2 Rollups"
+title: "AI Agents for MEV Extraction on Rollups"
 description: "MEV platform for EVM rollups: live mainnet liquidity-pool scanner, profitability/risk/price-impact benchmarks, and a multi-agent system (Eliza OS) orchestrating strategy execution and market analysis. Presented at BCK25, Mumbai."
 date: 2026-04-01
 repo: "https://github.com/Szczepoo13/AI-Agents-for-MEV-on-Rollups"
-tags: ["typescript", "ethers.js", "ai agents orchestration", "docker"]
+tags: ["typescript", "python", "ethers.js", "django", "ai agents orchestration", "docker"]
 researchPaper: "Design and Evaluation of AI Agents for MEV on Rollups"
 order: 1
 ---
@@ -50,3 +50,11 @@ production-scale version. -->
 TODO
 <!-- A working end-to-end pipeline (indexer + Postgres + API) with an integration test (Supertest +
 Vitest) covering the `/loans` endpoint's response shape and status codes. -->
+
+## MEV Monitoring Dashboard
+
+A companion tool for watching the MEV engine run: a lightweight Django dashboard that visualizes
+NDJSON logs in real time and exposes an admin panel for remote control (pause/resume/stop) via
+shared flag files, with no database required.
+
+Repo: [MEV-Monitoring-Dashboard](https://github.com/Szczepoo13/MEV-Monitoring-Dashboard)

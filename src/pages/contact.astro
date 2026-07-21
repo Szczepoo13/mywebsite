@@ -1,0 +1,102 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const thanksUrl = new URL(`${import.meta.env.BASE_URL}contact/thanks/`, Astro.site).toString();
+---
+
+<BaseLayout title="Contact - Szczepan Gurgul">
+	<h1 class="text-xl font-bold tracking-tight">Contact</h1>
+	<p class="mt-2 text-sm text-muted">
+		Have a question or want to work together? Send a message below.
+	</p>
+
+	<form
+		id="contact-form"
+		action="https://formspree.io/f/xpqvlqoe"
+		method="POST"
+		class="card mt-6 flex flex-col gap-4 px-6 py-6"
+	>
+		<input type="hidden" name="_subject" value="[Personal-Website] New message" />
+		<input type="hidden" name="_next" value={thanksUrl} />
+		<input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+
+		<label class="text-sm">
+			<span class="font-semibold">Name</span>
+			<input
+				type="text"
+				name="name"
+				required
+				class="mt-1 w-full border-2 border-border bg-surface px-3 py-2 text-sm text-ink focus:border-accent-blue focus:outline-none"
+			/>
+		</label>
+
+		<label class="text-sm">
+			<span class="font-semibold">Email</span>
+			<input
+				type="email"
+				name="email"
+				required
+				class="mt-1 w-full border-2 border-border bg-surface px-3 py-2 text-sm text-ink focus:border-accent-blue focus:outline-none"
+			/>
+		</label>
+
+		<label class="text-sm">
+			<span class="font-semibold">Message</span>
+			<textarea
+				name="message"
+				required
+				rows="6"
+				class="mt-1 w-full border-2 border-border bg-surface px-3 py-2 text-sm text-ink focus:border-accent-blue focus:outline-none"
+			></textarea>
+		</label>
+
+		<p id="contact-error" class="hidden text-sm font-semibold text-red-600"></p>
+
+		<button
+			id="contact-submit"
+			type="submit"
+			class="btn-blue btn-3d mt-2 self-start px-4 py-2 text-sm font-semibold"
+		>
+			Send
+		</button>
+	</form>
+
+	<script>
+		const form = document.getElementById("contact-form") as HTMLFormElement;
+		const errorEl = document.getElementById("contact-error") as HTMLParagraphElement;
+		const submitBtn = document.getElementById("contact-submit") as HTMLButtonElement;
+
+		form.addEventListener("submit", async (event) => {
+			event.preventDefault();
+			errorEl.classList.add("hidden");
+			submitBtn.disabled = true;
+			submitBtn.textContent = "Sending…";
+
+			try {
+				const response = await fetch(form.action, {
+					method: "POST",
+					body: new FormData(form),
+					headers: { Accept: "application/json" },
+				});
+
+				if (response.ok) {
+					sessionStorage.setItem("contact-sent", "1");
+					window.location.href = import.meta.env.BASE_URL;
+					return;
+				}
+
+				const data = await response.json().catch(() => null);
+				errorEl.textContent =
+					data?.errors?.map((e: { message: string }) => e.message).join(", ") ||
+					"Something went wrong. Please try again.";
+				errorEl.classList.remove("hidden");
+			} catch {
+				errorEl.textContent = "Something went wrong. Please try again.";
+				errorEl.classList.remove("hidden");
+			} finally {
+				submitBtn.disabled = false;
+				submitBtn.textContent = "Send";
+			}
+		});
+	</script>
+</BaseLayout>
