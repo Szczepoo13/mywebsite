@@ -3,9 +3,12 @@ import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 export async function getStaticPaths() {
-	// Nextrope-sourced posts live only as an expandable summary on /blog/ —
-	// no local page, since the full post is on the company blog.
-	const posts = (await getCollection("blog")).filter((post) => post.data.source === "personal");
+	// Posts with an externalUrl (Nextrope's blog, or a personal post published
+	// elsewhere like Paragraph) live only as an expandable summary on /blog/ —
+	// no local page, since the full post lives elsewhere.
+	const posts = (await getCollection("blog")).filter(
+		(post) => post.data.source === "personal" && !post.data.externalUrl
+	);
 	return posts.map((post) => ({
 		params: { slug: post.id },
 		props: { post },

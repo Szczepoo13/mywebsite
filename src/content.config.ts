@@ -7,11 +7,15 @@ const blog = defineCollection({
 		title: z.string(),
 		description: z.string(),
 		date: z.coerce.date(),
-		// "personal" posts get their own page here. "nextrope" posts live on the
-		// company blog (externalUrl) and only ever appear as an expandable
-		// summary on the list page — no local page is generated for them.
+		// "personal" posts are mine; "nextrope" posts are the company blog.
+		// A post gets its own local page unless it has an externalUrl (e.g. a
+		// personal post published on Paragraph, or any Nextrope post), in which
+		// case it only ever appears as an expandable summary linking out.
 		source: z.enum(["personal", "nextrope"]).default("personal"),
 		externalUrl: z.string().url().optional(),
+		// Where an externalUrl post actually lives, e.g. "Nextrope" or "Paragraph".
+		// Used for the "Read on {platform} →" link label.
+		platform: z.string().optional(),
 	}),
 });
 

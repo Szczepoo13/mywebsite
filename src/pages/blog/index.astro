@@ -24,14 +24,24 @@ const nextropePosts = posts.filter((post) => post.data.source === "nextrope").so
 			<p class="text-sm font-bold tracking-tight text-muted">Personal</p>
 			<div class="mt-2 flex flex-col gap-3">
 				{
-					personalPosts.map((post) => (
-						<PostCard
-							slug={post.id}
-							title={post.data.title}
-							description={post.data.description}
-							date={post.data.date}
-						/>
-					))
+					personalPosts.map((post) =>
+						post.data.externalUrl ? (
+							<ExternalPostCard
+								title={post.data.title}
+								description={post.data.description}
+								date={post.data.date}
+								externalUrl={post.data.externalUrl}
+								platform={post.data.platform as string}
+							/>
+						) : (
+							<PostCard
+								slug={post.id}
+								title={post.data.title}
+								description={post.data.description}
+								date={post.data.date}
+							/>
+						)
+					)
 				}
 			</div>
 		</div>
@@ -46,6 +56,7 @@ const nextropePosts = posts.filter((post) => post.data.source === "nextrope").so
 								description={post.data.description}
 								date={post.data.date}
 								externalUrl={post.data.externalUrl as string}
+								platform={post.data.platform as string}
 							/>
 						))}
 					</div>
