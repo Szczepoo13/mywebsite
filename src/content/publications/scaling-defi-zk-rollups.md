@@ -9,6 +9,6 @@ highlights:
   - "Deployed a private ZK rollup including sequencer and prover on zkSync (Elastic Chain stack)"
   - "Forked Uniswap V2 as the AMM under test"
   - "Built a load balancer / tx generator to stress-test throughput"
-  - "Benchmarked SNARK proofs, TPS (74 vs ~15-20 on mainnet), soft & hard finalities, and gas patterns"
+  - "Benchmarked SNARK proofs, TPS (71 vs ~15-20 on mainnet), soft & hard finalities, and gas patterns"
 tags: ["rollups", "uniswap-v2", "solidity", "python"]
 ---
