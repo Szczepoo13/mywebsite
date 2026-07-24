@@ -95,6 +95,27 @@
 		transform: translateY(2px);
 	}
 
+	/* Timeline dots (homepage Experience section) — small raised markers that
+	   lift like a card-3d/btn-3d when the row they belong to is hovered. */
+	.timeline-dot {
+		background-color: var(--color-surface);
+		border: 2px solid var(--color-ink);
+		box-shadow: 2px 2px 0 var(--color-ink);
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.timeline-dot {
+			transition:
+				transform 0.15s ease-out,
+				box-shadow 0.15s ease-out;
+		}
+
+		.timeline-item:hover .timeline-dot {
+			transform: translate(-2px, -2px);
+			box-shadow: 4px 4px 0 var(--color-ink);
+		}
+	}
+
 	.badge-gold {
 		background-color: var(--color-surface);
 		border: 1px solid var(--color-gold);

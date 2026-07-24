@@ -7,6 +7,17 @@ const publications = (await getCollection("publications")).sort(
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 
+// Flagship picks for the homepage teaser — full catalog lives on /projects/.
+const allProjects = await getCollection("projects");
+const featuredProjectSlugs = [
+	"mev-agents-l2-rollups",
+	"shared-liquidity-zk-rollups",
+	"decentralized-sports-betting",
+];
+const featuredProjects = featuredProjectSlugs
+	.map((slug) => allProjects.find((project) => project.id === slug))
+	.filter((project) => project != null);
+
 const stackCategories = [
 	{
 		label: "AI",
@@ -42,6 +53,22 @@ const stackCategories = [
 	},
 ];
 
+const experience = [
+	{
+		org: "Nextrope",
+		role: "AI × Blockchain Security Engineer",
+		current: true,
+		description:
+			"LLM-based audit automation for smart contract security: agent workflows with tool calling, retrieval and MCP integrations, EVM bytecode interpretation, and vulnerability classification.",
+	},
+	{
+		org: "Kaseya",
+		role: "Software Developer",
+		description:
+			"Cloud team on a Business Continuity & Disaster Recovery product: backend and frontend work, unit tests, code review, and production incident investigation.",
+	},
+];
+
 // TODO: replace with real Uniswap v4 hook incubator details.
 const achievements = [
 	{
@@ -70,20 +97,18 @@ const achievements = [
 <BaseLayout title="Szczepan Gurgul" bgPattern="grid">
 	<section class="card-3d bg-surface px-6 py-8">
 		<h1 class="text-2xl font-bold tracking-tight">Szczepan Gurgul</h1>
-		<p class="mt-1 text-sm text-muted">AI × Blockchain Engineer</p>
+		<p class="mt-1 text-sm text-muted">AI × Blockchain Security Engineer</p>
 		<p class="mt-1 text-xs font-medium tracking-wide text-muted uppercase">
 			Distributed Systems • Protocol Engineering • AI Agents
 		</p>
 		<p class="mt-6 max-w-2xl text-sm leading-relaxed">
 			Software engineer specializing in distributed systems, blockchain infrastructure, and AI agents. I
 			build secure, maintainable systems and tooling - from smart contracts and DeFi primitives
-		    to performance-oriented infrastructure. Currently working as an AI × Blockchain
-			Engineer @ Nextrope, building AI agent workflows for smart contract security analysis and
-			EVM bytecode auditing.
+		    to performance-oriented infrastructure.
 		</p>
 		<div class="mt-6 border-t border-border pt-4 text-sm">
 			<p class="font-bold">Education</p>
-			<p class="mt-1 text-muted">M.Sc. Informatics, University of Zürich — 2026 (magna cum laude)</p>
+			<p class="mt-1 text-muted">M.Sc. Informatics, University of Zürich — 2026</p>
 			<p class="mt-1 text-muted">
 				B.Sc. Mechatronic Engineering, AGH University of Science and Technology — 2023
 			</p>
@@ -106,6 +131,63 @@ const achievements = [
 					))
 				}
 			</div>
+		</div>
+	</section>
+
+	<section class="mt-6">
+		<h2 class="text-xl font-bold tracking-tight">Experience</h2>
+		<div class="mt-4 border-l-2 border-border pl-6">
+			{
+				experience.map((job) => (
+					<div class="timeline-item relative pb-6">
+						<span
+							class:list={[
+								"timeline-dot absolute -left-[31px] top-1 h-3 w-3 rounded-full",
+								job.current && "bg-accent-blue",
+							]}
+						/>
+						<p class="text-sm font-bold tracking-tight">
+							{job.org} <span class="font-normal text-muted">— {job.role}</span>
+							{job.current && (
+								<span class="ml-1 text-xs font-semibold text-accent-blue">(current)</span>
+							)}
+						</p>
+						<p class="mt-1 text-sm text-muted">{job.description}</p>
+					</div>
+				))
+			}
+			<div class="timeline-item relative">
+				<span class="timeline-dot absolute -left-[31px] top-1 h-3 w-3 rounded-full" />
+				<p class="text-sm text-muted">
+					<span class="font-semibold text-ink">Previously:</span> embedded and commissioning intern work
+					on marine radar systems in Dubai before moving into distributed systems.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="mt-6">
+		<div class="flex items-baseline justify-between">
+			<h2 class="text-xl font-bold tracking-tight">Projects</h2>
+			<a
+				href={`${import.meta.env.BASE_URL}projects/`}
+				class="text-sm font-semibold text-accent-blue hover:underline"
+			>
+				All projects →
+			</a>
+		</div>
+		<div class="mt-4 grid gap-3 sm:grid-cols-3">
+			{
+				featuredProjects.map((project) => (
+					<a
+						href={`${import.meta.env.BASE_URL}projects/${project.id}/`}
+						class="card-3d bg-surface block px-5 py-4"
+					>
+						<h3 class="text-base font-bold tracking-tight">{project.data.title}</h3>
+						<p class="mt-2 line-clamp-4 text-sm text-muted">{project.data.description}</p>
+					</a>
+				))
+			}
 		</div>
 	</section>
 
