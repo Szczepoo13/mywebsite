@@ -1,7 +1,7 @@
 ---
 title: "📄 AI Agents for MEV Extraction on Rollups"
 authors: "Szczepan Gurgul, Krzysztof M. Gogol, Claudio J. Tessone"
-venue: "The Physical Society of Japan (publication in August)"
+venue: "The Physical Society of Japan — accepted, pending JPS Conference Proceedings publication"
 date: 2026-01-01
 description: "Co-authored with researchers at University of Zürich."
 highlights:
