@@ -1,0 +1,130 @@
+---
+// Click any image inside [data-zoomable] to see it full size. Esc, a click
+// anywhere, or the close button returns it to its place.
+---
+
+<dialog id="image-zoom" class="zoom" aria-label="Image viewer">
+	<div class="zoom-close">
+		<button type="button" class="btn-ghost btn-3d px-3 py-1 text-xs font-semibold">Close</button>
+	</div>
+	<img class="zoom-img" alt="" />
+</dialog>
+
+<style>
+	.zoom {
+		position: fixed;
+		inset: var(--frame);
+		width: auto;
+		height: auto;
+		max-width: none;
+		max-height: none;
+		margin: 0;
+		padding: 56px 24px 24px;
+		border: 0;
+		background: transparent;
+		overscroll-behavior: contain;
+		cursor: zoom-out;
+	}
+
+	.zoom[open] {
+		display: grid;
+		place-items: center;
+	}
+
+	.zoom::backdrop {
+		background: rgba(22, 24, 29, 0.82);
+	}
+
+	.zoom-img {
+		max-width: 100%;
+		max-height: calc(100dvh - 2 * var(--frame) - 80px);
+		background: #fff;
+		border: 2px solid var(--color-ink);
+		box-shadow: 6px 6px 0 var(--color-ink);
+	}
+
+	.zoom-close {
+		position: absolute;
+		top: 12px;
+		right: 12px;
+	}
+
+	:global(html.zooming :is(.frame, .site-header, .site-footer, #main, .nav-tab-active, .project-hero)) {
+		view-transition-name: none !important;
+	}
+
+	:global(::view-transition-group(zoom-img)) {
+		animation-duration: 0.45s;
+		animation-timing-function: var(--ease-move);
+	}
+</style>
+
+<script>
+	const NAME = "zoom-img";
+	let source: HTMLImageElement | null = null;
+
+	const withTransition = (update: () => void) => {
+		if (!document.startViewTransition || matchMedia("(prefers-reduced-motion: reduce)").matches) {
+			update();
+			return;
+		}
+		// Only the image should morph: switch off the page-level transition
+		// names (header, main, project header) while this one runs.
+		const root = document.documentElement;
+		root.classList.add("zooming");
+		document.startViewTransition(update).finished.finally(() => root.classList.remove("zooming"));
+	};
+
+	document.addEventListener("click", (event) => {
+		const img = (event.target as Element).closest<HTMLImageElement>("[data-zoomable] img");
+		const dialog = document.getElementById("image-zoom") as HTMLDialogElement | null;
+		if (!img || !dialog) return;
+
+		const big = dialog.querySelector<HTMLImageElement>(".zoom-img")!;
+		source = img;
+		img.style.viewTransitionName = NAME;
+		withTransition(() => {
+			img.style.viewTransitionName = "";
+			big.src = img.currentSrc || img.src;
+			big.alt = img.alt;
+			big.style.viewTransitionName = NAME;
+			dialog.showModal();
+		});
+	});
+
+	const closeZoom = (dialog: HTMLDialogElement) => {
+		const big = dialog.querySelector<HTMLImageElement>(".zoom-img")!;
+		const back = source;
+		source = null;
+		if (!back?.isConnected) {
+			big.style.viewTransitionName = "";
+			dialog.close();
+			return;
+		}
+		withTransition(() => {
+			big.style.viewTransitionName = "";
+			back.style.viewTransitionName = NAME;
+			dialog.close();
+		});
+		setTimeout(() => (back.style.viewTransitionName = ""), 600);
+	};
+
+	// Any click inside the open viewer closes it (the image is just a view).
+	document.addEventListener("click", (event) => {
+		const dialog = document.getElementById("image-zoom") as HTMLDialogElement | null;
+		if (!dialog?.open || !dialog.contains(event.target as Node)) return;
+		closeZoom(dialog);
+	});
+
+	// Esc: animate the close instead of the dialog's instant one.
+	document.addEventListener(
+		"cancel",
+		(event) => {
+			const dialog = event.target as HTMLDialogElement;
+			if (dialog.id !== "image-zoom") return;
+			event.preventDefault();
+			closeZoom(dialog);
+		},
+		true,
+	);
+</script>

@@ -1,0 +1,63 @@
+---
+import Badge from "./Badge.astro";
+
+interface Props {
+	slug: string;
+	title: string;
+	description: string;
+	tags?: string[];
+	repo?: string;
+	/** Clamp the description to a few lines (homepage teaser). */
+	compact?: boolean;
+	/** Placing or prize, e.g. "1st place". */
+	award?: string;
+	/** Research paper status: "published" or "accepted". */
+	paperStatus?: "published" | "accepted";
+	headingLevel?: "h2" | "h3";
+}
+
+const { slug, title, description, tags = [], repo, compact = false, award, paperStatus, headingLevel = "h3" } = Astro.props;
+const Heading = headingLevel;
+---
+
+<article
+	class="tile card-3d card-link flex h-full flex-col bg-surface px-5 py-4"
+	data-project={slug}
+>
+	<Heading class="text-base font-bold tracking-tight">
+		<a href={`${import.meta.env.BASE_URL}projects/${slug}/`} class="tile-link">{title}</a>
+		{award && <span class="award-chip ml-1.5 align-middle">{award}</span>}
+		{paperStatus && (
+			<span class="paper-chip ml-1.5 align-middle">
+				{paperStatus === "published" ? "Published paper" : "Accepted paper"}
+			</span>
+		)}
+	</Heading>
+	<p class:list={["mt-2 text-sm text-muted", compact && "line-clamp-4"]}>{description}</p>
+	{
+		tags.length > 0 && (
+			<ul class="mt-3 flex flex-wrap gap-2" aria-label="Tags">
+				{tags.map((tag) => (
+					<li>
+						<Badge label={tag} />
+					</li>
+				))}
+			</ul>
+		)
+	}
+	<div class="mt-auto flex gap-2 pt-4 text-xs">
+		<span class="tile-cta btn-blue btn-3d px-3 py-1 font-semibold" aria-hidden="true">Details</span>
+		{
+			repo && (
+				<a
+					href={repo}
+					class="tile-above btn-blue btn-3d px-3 py-1 font-semibold"
+					target="_blank"
+					rel="noreferrer"
+				>
+					Repo
+				</a>
+			)
+		}
+	</div>
+</article>

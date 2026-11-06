@@ -13,34 +13,256 @@
 	--color-accent-blue: #3f5bf6;
 	--color-accent-blue-hover: #3349d1;
 	--color-gold: #b8860b;
+	/* Darker gold for small text on white (#b8860b is only 3.2:1). */
+	--color-gold-ink: #8a6406;
+
+	/* Beaker's red — only used by the intro loader and the logo. */
+	--color-beaker: #d8341b;
+	--color-frame: #ffffff;
 }
 
-/* Flat modern surfaces, in the spirit of the current Curve DEX UI. */
+:root {
+	/* White passepartout around the whole UI. */
+	--frame: clamp(8px, 1.1vw, 16px);
+	/* The scrollbar already adds white on the right (its track is white), so
+	   the right edge of the frame shrinks by the scrollbar's width.
+	   100vw - 100% = scrollbar width wherever % is the viewport width. */
+	--frame-right: max(0px, calc(var(--frame) - (100vw - 100%)));
+	--header-h: 60px;
+
+	/* Two curves for the whole site: one for things that move across the
+	   screen, one for things that settle into place. */
+	--ease-move: cubic-bezier(0.65, 0, 0.35, 1);
+	--ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
+
+	interpolate-size: allow-keywords;
+	scrollbar-color: var(--color-ink) var(--color-frame);
+}
+
+@media (max-width: 640px) {
+	:root {
+		--frame: 6px;
+	}
+}
+
+html {
+	background-color: var(--color-frame);
+	scrollbar-gutter: stable;
+	scroll-padding-top: calc(var(--frame) + var(--header-h) + 16px);
+	-webkit-tap-highlight-color: transparent;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		scroll-behavior: smooth;
+	}
+}
+
+body {
+	margin: var(--frame) var(--frame-right) var(--frame) var(--frame);
+	min-height: calc(100dvh - 2 * var(--frame));
+	touch-action: manipulation;
+}
+
+h1,
+h2,
+h3 {
+	text-wrap: balance;
+}
+
+p {
+	text-wrap: pretty;
+}
+
+:where(a, button, summary, input, textarea, [tabindex]):focus-visible {
+	outline: 2px solid var(--color-accent-blue);
+	outline-offset: 3px;
+}
+
+/* ---------------------------------------------------------------------------
+   Frame: a fixed white border with a 2px ink rule on its inner edge, so the
+   site reads as one window. Content scrolls underneath it.
+   ------------------------------------------------------------------------- */
+.frame {
+	position: fixed;
+	inset: 0;
+	z-index: 70;
+	overflow: hidden;
+	pointer-events: none;
+	will-change: transform;
+	/* Own transition layer, kept on top, so page transitions never draw
+	   over the frame. */
+	view-transition-name: frame;
+}
+
+/* The inner window: an ink rule whose huge spread shadow paints the white
+   frame around it. */
+.frame::after {
+	content: "";
+	position: absolute;
+	top: var(--frame);
+	right: var(--frame-right);
+	bottom: var(--frame);
+	left: var(--frame);
+	border: 2px solid var(--color-ink);
+	box-shadow: 0 0 0 100vmax var(--color-frame);
+}
+
+.skip-link {
+	position: fixed;
+	top: calc(var(--frame) + 8px);
+	left: calc(var(--frame) + 8px);
+	z-index: 80;
+	transform: translateY(-200%);
+}
+
+.skip-link:focus-visible {
+	transform: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Header
+   ------------------------------------------------------------------------- */
+.site-header {
+	z-index: 40;
+	background-color: var(--color-surface-alt);
+	border-bottom: 2px solid var(--color-ink);
+}
+
+@media (min-width: 768px) {
+	.site-header {
+		position: sticky;
+		top: var(--frame);
+	}
+}
+
+.brand-mark {
+	width: 34px;
+	height: 34px;
+	border: 2px solid var(--color-ink);
+	box-shadow: 2px 2px 0 var(--color-ink);
+	background: #000;
+	object-fit: cover;
+}
+
+.nav-tab {
+	position: relative;
+	isolation: isolate;
+}
+
+.nav-tab[aria-current="page"] {
+	background-color: var(--color-accent-blue-hover);
+}
+
+/* The active tab's underline is its own element with a fixed
+   view-transition-name, so it slides from tab to tab on navigation. */
+.nav-tab-active {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	height: 3px;
+	background-color: var(--color-ink);
+	view-transition-name: nav-active;
+}
+
+/* ---------------------------------------------------------------------------
+   Links
+   ------------------------------------------------------------------------- */
+
+/* Underline that draws in from the left on hover. Works across line wraps. */
+.link-draw {
+	background-image: linear-gradient(currentColor, currentColor);
+	background-repeat: no-repeat;
+	background-position: 0 100%;
+	background-size: 0% 2px;
+	padding-bottom: 1px;
+	transition: background-size 0.35s var(--ease-settle);
+}
+
+.link-draw:hover,
+.link-draw:focus-visible {
+	background-size: 100% 2px;
+}
+
+/* Inline text links keep a quiet static underline that thickens on hover. */
+.link-inline {
+	color: var(--color-accent-blue);
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 3px;
+	transition:
+		text-decoration-thickness 0.2s var(--ease-settle),
+		color 0.2s var(--ease-settle);
+}
+
+.link-inline:hover {
+	color: var(--color-accent-blue-hover);
+	text-decoration-thickness: 2px;
+}
+
+/* "[label]" links: brackets in muted ink, label underlines on hover. */
+.link-bracket {
+	display: inline-flex;
+	align-items: baseline;
+	gap: 0.15em;
+	font-weight: 600;
+	color: var(--color-accent-blue);
+}
+
+.link-bracket::before,
+.link-bracket::after {
+	color: var(--color-muted);
+	transition: transform 0.3s var(--ease-settle);
+}
+
+.link-bracket::before {
+	content: "[";
+}
+
+.link-bracket::after {
+	content: "]";
+}
+
+.link-bracket:hover::before {
+	transform: translateX(-3px);
+}
+
+.link-bracket:hover::after {
+	transform: translateX(3px);
+}
+
 @layer components {
 	.card {
 		background-color: var(--color-surface);
 		border: 2px solid var(--color-border);
 	}
 
-	/* Old-school raised look with a hard offset shadow, no blur — e.g. Curve's
-	   filter buttons. */
+	/* Old-school raised look with a hard offset shadow, no blur. Static by
+	   default; only cards that are links lift on hover (see .card-link). */
 	.card-3d {
 		background-color: var(--color-surface-alt);
 		border: 2px solid var(--color-ink);
 		box-shadow: 4px 4px 0 var(--color-ink);
 	}
 
-	@media (prefers-reduced-motion: no-preference) {
-		.card-3d {
-			transition:
-				transform 0.15s ease-out,
-				box-shadow 0.15s ease-out;
-		}
+	.card-link {
+		cursor: pointer;
+		transition:
+			transform 0.18s var(--ease-settle),
+			box-shadow 0.18s var(--ease-settle);
+	}
 
-		.card-3d:hover {
-			transform: translate(-3px, -3px);
-			box-shadow: 7px 7px 0 var(--color-ink);
-		}
+	.card-link:hover {
+		transform: translate(-3px, -3px);
+		box-shadow: 7px 7px 0 var(--color-ink);
+	}
+
+	/* Pressing a card pushes it into the page before it opens. */
+	.card-link:active {
+		transform: translate(2px, 2px);
+		box-shadow: 1px 1px 0 var(--color-ink);
+		transition-duration: 0.06s;
 	}
 
 	.bar {
@@ -61,14 +283,27 @@
 		color: #fff;
 	}
 
+	.btn-ghost {
+		background-color: var(--color-surface);
+		color: var(--color-ink);
+	}
+
+	.btn-ghost:hover {
+		background-color: var(--color-surface-alt);
+	}
+
 	/* Same raised look as .card-3d, plus a press-down interaction so it reads
 	   as clickable: hover nudges it toward the surface, active flattens it. */
 	.btn-3d {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5em;
 		border: 2px solid var(--color-ink);
 		box-shadow: 3px 3px 0 var(--color-ink);
 		transition:
 			transform 0.08s ease-out,
-			box-shadow 0.08s ease-out;
+			box-shadow 0.08s ease-out,
+			background-color 0.15s ease-out;
 	}
 
 	.btn-3d:hover {
@@ -79,6 +314,12 @@
 	.btn-3d:active {
 		transform: translate(3px, 3px);
 		box-shadow: 0 0 0 var(--color-ink);
+	}
+
+	.btn-3d:disabled {
+		cursor: progress;
+		transform: translate(2px, 2px);
+		box-shadow: 1px 1px 0 var(--color-ink);
 	}
 
 	/* Lighter-weight press feedback for elements that shouldn't get the full
@@ -96,31 +337,55 @@
 	}
 
 	/* Timeline dots (homepage Experience section) — small raised markers that
-	   lift like a card-3d/btn-3d when the row they belong to is hovered. */
+	   lift when the row they belong to is hovered. */
 	.timeline-dot {
 		background-color: var(--color-surface);
 		border: 2px solid var(--color-ink);
 		box-shadow: 2px 2px 0 var(--color-ink);
+		transition:
+			transform 0.18s var(--ease-settle),
+			box-shadow 0.18s var(--ease-settle);
 	}
 
-	@media (prefers-reduced-motion: no-preference) {
-		.timeline-dot {
-			transition:
-				transform 0.15s ease-out,
-				box-shadow 0.15s ease-out;
-		}
-
-		.timeline-item:hover .timeline-dot {
-			transform: translate(-2px, -2px);
-			box-shadow: 4px 4px 0 var(--color-ink);
-		}
+	.timeline-item:hover .timeline-dot {
+		transform: translate(-2px, -2px);
+		box-shadow: 4px 4px 0 var(--color-ink);
 	}
 
 	.badge-gold {
 		background-color: var(--color-surface);
 		border: 1px solid var(--color-gold);
-		color: var(--color-gold);
+		color: var(--color-gold-ink);
 		border-radius: 9999px;
+	}
+
+	/* Form fields: the hard shadow appears on focus, in the accent blue. */
+	.field {
+		width: 100%;
+		border: 2px solid var(--color-border);
+		background-color: var(--color-surface);
+		padding: 0.5rem 0.75rem;
+		font-size: 0.875rem;
+		color: var(--color-ink);
+		transition:
+			border-color 0.15s ease-out,
+			box-shadow 0.2s var(--ease-settle),
+			transform 0.2s var(--ease-settle);
+	}
+
+	.field:hover {
+		border-color: var(--color-muted);
+	}
+
+	.field:focus {
+		outline: none;
+		border-color: var(--color-ink);
+		box-shadow: 4px 4px 0 var(--color-accent-blue);
+		transform: translate(-2px, -2px);
+	}
+
+	.field[aria-invalid="true"] {
+		border-color: #dc2626;
 	}
 
 	/* Fine square grid — homepage only. */
@@ -148,38 +413,494 @@
 		);
 	}
 
-	/* Slow background-pattern drift. Each shift equals exactly one tile so the
-	   loop point is seamless; magnitude tuned per pattern's own repeat unit. */
+	/* The pattern lives on its own fixed layer (.bg-layer) behind the page.
+	   It drifts in 1px steps (one every ~1.7s) instead of every frame: it
+	   looks the same at this speed but costs almost nothing, where a smooth
+	   full-screen background animation made scrolling stutter. Each loop
+	   shifts exactly one tile, so it's seamless. */
+	.bg-layer {
+		position: fixed;
+		inset: -32px;
+		z-index: -1;
+		pointer-events: none;
+		background-color: var(--color-page);
+	}
+
+	.bg-grid {
+		--drift-x: 14px;
+		--drift-y: 14px;
+		--drift-steps: 14;
+	}
+
+	.bg-dots {
+		--drift-x: 16px;
+		--drift-y: 16px;
+		--drift-steps: 16;
+	}
+
+	.bg-diagonal {
+		--drift-x: 9.9px;
+		--drift-y: -9.9px;
+		--drift-steps: 10;
+	}
+
 	@media (prefers-reduced-motion: no-preference) {
-		.bg-grid {
-			animation: bg-drift-grid 24s linear infinite;
-		}
-
-		.bg-dots {
-			animation: bg-drift-dots 24s linear infinite;
-		}
-
-		.bg-diagonal {
-			animation: bg-drift-diagonal 24s linear infinite;
+		.bg-layer {
+			animation: bg-drift 24s steps(var(--drift-steps, 14)) infinite;
 		}
 	}
 
-	@keyframes bg-drift-grid {
+	@keyframes bg-drift {
 		to {
-			background-position: 14px 14px;
+			transform: translate(var(--drift-x, 0), var(--drift-y, 0));
 		}
 	}
+}
 
-	@keyframes bg-drift-dots {
-		to {
-			background-position: 16px 16px;
-		}
+/* Placing / prize next to a project title. */
+.award-chip {
+	display: inline-block;
+	border: 2px solid var(--color-ink);
+	background-color: var(--color-gold-ink);
+	color: #fff;
+	padding: 0 6px;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0;
+	line-height: 18px;
+	white-space: nowrap;
+}
+
+/* Research paper status next to a project title. */
+.paper-chip {
+	display: inline-block;
+	border: 2px solid var(--color-ink);
+	background-color: var(--color-surface);
+	color: var(--color-ink);
+	padding: 0 6px;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0;
+	line-height: 18px;
+	white-space: nowrap;
+}
+
+/* "Work in progress" marker next to a project title. */
+.status-chip {
+	display: inline-block;
+	border: 2px solid var(--color-ink);
+	background-color: var(--color-surface-alt);
+	padding: 0 6px;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0;
+	line-height: 18px;
+	white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------------------
+   Project tiles: the whole tile is the hit area (title link stretched over
+   it), the Repo link sits above it.
+   ------------------------------------------------------------------------- */
+.tile {
+	position: relative;
+}
+
+.tile-link::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+}
+
+.tile-link:focus-visible {
+	outline: none;
+}
+
+.tile:has(.tile-link:focus-visible) {
+	outline: 2px solid var(--color-accent-blue);
+	outline-offset: 4px;
+}
+
+.tile-above {
+	position: relative;
+	z-index: 1;
+}
+
+/* The fake "Details" button follows the tile's hover/press state. */
+.tile-cta {
+	transition:
+		transform 0.08s ease-out,
+		box-shadow 0.08s ease-out,
+		background-color 0.15s ease-out;
+}
+
+.tile:hover .tile-cta {
+	background-color: var(--color-accent-blue-hover);
+}
+
+.tile:active .tile-cta {
+	transform: translate(3px, 3px);
+	box-shadow: 0 0 0 var(--color-ink);
+}
+
+/* ---------------------------------------------------------------------------
+   Disclosure (<details>) that opens with a height animation.
+   ------------------------------------------------------------------------- */
+.disclosure > summary {
+	list-style: none;
+	cursor: pointer;
+}
+
+.disclosure > summary::-webkit-details-marker {
+	display: none;
+}
+
+.disclosure-icon {
+	display: inline-grid;
+	place-items: center;
+	flex: none;
+	width: 18px;
+	height: 18px;
+	border: 2px solid var(--color-ink);
+	background-color: var(--color-surface);
+	font-size: 13px;
+	font-weight: 700;
+	line-height: 1;
+	transition: transform 0.35s var(--ease-settle);
+}
+
+.disclosure[open] .disclosure-icon {
+	transform: rotate(45deg);
+}
+
+.disclosure::details-content {
+	block-size: 0;
+	overflow: clip;
+	transition:
+		block-size 0.4s var(--ease-settle),
+		content-visibility 0.4s allow-discrete;
+}
+
+.disclosure[open]::details-content {
+	block-size: auto;
+}
+
+/* ---------------------------------------------------------------------------
+   Toast
+   ------------------------------------------------------------------------- */
+.toast {
+	position: fixed;
+	right: calc(var(--frame) + 16px);
+	bottom: calc(var(--frame) + 16px);
+	z-index: 60;
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(24px);
+	transition:
+		transform 0.45s var(--ease-settle),
+		opacity 0.25s ease-out,
+		visibility 0s linear 0.45s;
+}
+
+.toast.is-visible {
+	opacity: 1;
+	visibility: visible;
+	transform: none;
+	transition-delay: 0s;
+}
+
+/* ---------------------------------------------------------------------------
+   Intro loader: Beaker fills up with colour like a beaker, then the dark
+   screen lifts and the logo flies into the header. Shown once per session.
+   ------------------------------------------------------------------------- */
+.intro {
+	display: none;
+}
+
+html.intro-pending {
+	overflow: hidden;
+}
+
+html.intro-pending .intro {
+	position: fixed;
+	inset: 0;
+	z-index: 65;
+	display: grid;
+	place-items: center;
+	color: #e9eaee;
+	cursor: progress;
+	/* If the script never runs, get out of the way anyway. */
+	animation: intro-failsafe 0.4s ease 5s forwards;
+}
+
+html.intro-pending .brand-mark {
+	visibility: hidden;
+}
+
+.intro-bg {
+	position: absolute;
+	inset: 0;
+	background-color: var(--color-ink);
+	background-image:
+		linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+		linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+	background-size: 14px 14px;
+}
+
+.intro-stage {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 28px;
+}
+
+.intro-logo {
+	position: relative;
+	width: 156px;
+	height: 156px;
+	border: 2px solid #e9eaee;
+	box-shadow: 6px 6px 0 var(--color-beaker);
+	background: #000;
+	overflow: hidden;
+}
+
+.intro-logo img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.intro-logo-base {
+	filter: grayscale(1) brightness(0.55) contrast(1.1);
+}
+
+/* The coloured copy is revealed bottom-up; its clip-path is driven by JS. */
+.intro-logo-fill {
+	clip-path: inset(100% 0 0 0);
+	filter: saturate(1.25);
+}
+
+.intro-meter {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	font-size: 12px;
+	font-variant-numeric: tabular-nums;
+	transition: opacity 0.2s ease-out;
+}
+
+.intro-bar {
+	position: relative;
+	width: 156px;
+	height: 12px;
+	border: 2px solid #e9eaee;
+	padding: 2px;
+}
+
+.intro-bar-fill {
+	display: block;
+	height: 100%;
+	background: repeating-linear-gradient(
+		to right,
+		var(--color-beaker) 0 6px,
+		transparent 6px 8px
+	);
+	clip-path: inset(0 100% 0 0);
+}
+
+.intro-count {
+	min-width: 4ch;
+	text-align: right;
+}
+
+html.intro-leaving .intro-meter {
+	opacity: 0;
+}
+
+@keyframes intro-failsafe {
+	to {
+		opacity: 0;
+		visibility: hidden;
+		pointer-events: none;
+	}
+}
+
+/* ---------------------------------------------------------------------------
+   Page transitions (Astro ClientRouter → View Transitions API)
+   ------------------------------------------------------------------------- */
+@keyframes page-out {
+	to {
+		opacity: 0;
+		transform: translateY(-6px);
+	}
+}
+
+@keyframes page-in {
+	from {
+		opacity: 0;
+		transform: translateY(12px);
+	}
+}
+
+/* Anything not covered by a snapshot during a transition shows white, like
+   the frame, instead of black. */
+::view-transition {
+	background-color: var(--color-frame);
+}
+
+::view-transition-group(frame) {
+	z-index: 100;
+	animation: none;
+}
+
+::view-transition-old(frame) {
+	display: none;
+}
+
+::view-transition-new(frame) {
+	animation: none;
+}
+
+::view-transition-group(site-header) {
+	z-index: 50;
+	animation: none;
+}
+
+::view-transition-old(site-header) {
+	display: none;
+}
+
+::view-transition-new(site-header) {
+	animation: none;
+}
+
+::view-transition-old(page) {
+	animation: page-out 0.15s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+::view-transition-new(page) {
+	animation: page-in 0.45s var(--ease-settle) 0.12s both;
+}
+
+::view-transition-group(page) {
+	animation-duration: 0.45s;
+}
+
+/* The footer leaves and arrives with the page content. */
+::view-transition-old(site-footer) {
+	animation: page-out 0.15s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+::view-transition-new(site-footer) {
+	animation: page-in 0.45s var(--ease-settle) 0.12s both;
+}
+
+/* Previous / next project: the page slides sideways. */
+@keyframes slide-out-left {
+	to {
+		opacity: 0;
+		transform: translateX(-56px);
+	}
+}
+
+@keyframes slide-out-right {
+	to {
+		opacity: 0;
+		transform: translateX(56px);
+	}
+}
+
+@keyframes slide-in-from-right {
+	from {
+		opacity: 0;
+		transform: translateX(56px);
+	}
+}
+
+@keyframes slide-in-from-left {
+	from {
+		opacity: 0;
+		transform: translateX(-56px);
+	}
+}
+
+html[data-slide="next"]::view-transition-old(page) {
+	animation: slide-out-left 0.22s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+html[data-slide="next"]::view-transition-new(page) {
+	animation: slide-in-from-right 0.45s var(--ease-settle) 0.1s both;
+}
+
+html[data-slide="prev"]::view-transition-old(page) {
+	animation: slide-out-right 0.22s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+html[data-slide="prev"]::view-transition-new(page) {
+	animation: slide-in-from-left 0.45s var(--ease-settle) 0.1s both;
+}
+
+/* A clicked project tile grows into the project page header (and back).
+   The box itself (outline, shadow, fill) is drawn on the group so it never
+   stretches; the two snapshots sit at natural size inside it and crossfade. */
+::view-transition-group(project-hero) {
+	z-index: 10;
+	animation-duration: 0.55s;
+	animation-timing-function: var(--ease-move);
+	background-color: var(--color-surface);
+	outline: 2px solid var(--color-ink);
+	outline-offset: -2px;
+	box-shadow: 4px 4px 0 var(--color-ink);
+}
+
+::view-transition-image-pair(project-hero) {
+	overflow: clip;
+}
+
+::view-transition-old(project-hero),
+::view-transition-new(project-hero) {
+	width: 100%;
+	height: 100%;
+	object-fit: none;
+	object-position: left top;
+	overflow: clip;
+}
+
+::view-transition-old(project-hero) {
+	animation: page-out 0.2s ease-in both;
+}
+
+::view-transition-new(project-hero) {
+	animation: page-in 0.35s var(--ease-settle) 0.15s both;
+}
+
+::view-transition-group(nav-active) {
+	z-index: 51;
+	animation-duration: 0.5s;
+	animation-timing-function: var(--ease-move);
+}
+
+::view-transition-old(nav-active),
+::view-transition-new(nav-active) {
+	height: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		transition-duration: 0.01ms !important;
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
 	}
 
-	@keyframes bg-drift-diagonal {
-		to {
-			background-position: 9.9px -9.9px;
-		}
+	::view-transition-group(*),
+	::view-transition-old(*),
+	::view-transition-new(*) {
+		animation: none !important;
 	}
 }
 
@@ -192,6 +913,7 @@
 		--tw-prose-body: var(--color-ink);
 		--tw-prose-bullets: var(--color-ink);
 		--tw-prose-counters: var(--color-ink);
+		--tw-prose-links: var(--color-accent-blue);
 		line-height: 1.85;
 	}
 
@@ -205,6 +927,7 @@
 		height: auto;
 		display: block;
 		margin-inline: auto;
+		cursor: zoom-in;
 	}
 
 	/* One-off: the full MEV system pipeline diagram is too dense to read at the
@@ -212,7 +935,6 @@
 	   since a single markdown image has no other hook to style individually. */
 	.prose img[alt^="Three-layer MEV research bot"] {
 		max-width: 100%;
-		cursor: zoom-in;
 	}
 
 	/* Typography plugin defaults tables to width:100%, which stretches a

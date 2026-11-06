@@ -1,9 +1,16 @@
 ---
 interface Props {
 	label: string;
+	/** "md" for places where the tags are the content (homepage stack). */
+	size?: "sm" | "md";
 }
 
-const { label } = Astro.props;
+const { label, size = "sm" } = Astro.props;
 ---
 
-<span class="badge-gold inline-block px-2 py-0.5 text-xs font-semibold">{label}</span>
+<span
+	class:list={[
+		"badge-gold inline-block font-semibold",
+		size === "md" ? "px-3 py-1 text-sm" : "px-2 py-0.5 text-xs",
+	]}>{label}</span
+>

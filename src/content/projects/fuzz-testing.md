@@ -1,7 +1,7 @@
 ---
 title: "Fuzz & Property-Based Testing in Java"
 description: "Systematic software testing exercises in Java following Effective Software Testing (Aniche): specification-based tests, structural coverage (JaCoCo), mutation testing (PIT), property-based testing with jqwik, and a Python blackbox/greybox mutation fuzzer evaluated with statistical tests."
-date: 2026-07-15
+date: 2025-07-15
 repo: "https://github.com/Szczepoo13/FuzzTesting"
 tags: ["java", "python", "junit", "mutation testing", "property-based testing"]
 order: 3

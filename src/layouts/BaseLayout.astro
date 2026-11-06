@@ -1,47 +1,144 @@
 ---
+import { ClientRouter } from "astro:transitions";
 import Navigation from "../components/Navigation.astro";
 import Footer from "../components/Footer.astro";
+import Intro from "../components/Intro.astro";
 import "../styles/global.css";
 
 interface Props {
 	title: string;
+	description?: string;
 	bgPattern?: "grid" | "dots" | "diagonal";
-	wide?: boolean;
+	/** Container width: "narrow" for reading pages, "wide" (default) for the rest. */
+	width?: "narrow" | "wide";
 }
 
-const { title, bgPattern, wide } = Astro.props;
+const {
+	title,
+	description = "Szczepan Gurgul — AI × blockchain security engineer. Distributed systems, protocol engineering and AI agents.",
+	bgPattern,
+	width = "wide",
+} = Astro.props;
 const bgClass = bgPattern ? `bg-${bgPattern}` : undefined;
 ---
 
-<html lang="en">
+<html lang="en" transition:animate="none">
 	<head>
 		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content={description} />
+		<meta name="theme-color" content="#ffffff" />
 		<link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
 		<link rel="icon" href={`${import.meta.env.BASE_URL}favicon.ico`} sizes="any" />
-		<meta name="viewport" content="width=device-width" />
+		<link rel="preload" as="image" href={`${import.meta.env.BASE_URL}images/beaker.webp`} />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		<!-- Decide before first paint whether the intro plays: once per tab
+		     session, never with reduced motion. -->
+		<script is:inline>
+			try {
+				if (
+					!sessionStorage.getItem("intro-seen") &&
+					!matchMedia("(prefers-reduced-motion: reduce)").matches
+				) {
+					document.documentElement.classList.add("intro-pending");
+				}
+			} catch (e) {}
+		</script>
+		<ClientRouter />
 	</head>
-	<body class:list={["flex min-h-screen flex-col bg-page font-mono text-ink", bgClass]}>
+	<body class="flex flex-col font-mono text-ink">
+		<a href="#main" class="skip-link btn-blue btn-3d px-3 py-1 text-sm font-semibold">Skip to content</a>
+		<div class:list={["bg-layer", bgClass]} aria-hidden="true"></div>
+		<div class="frame" aria-hidden="true"></div>
+		<Intro />
 		<Navigation />
-		<main class:list={["mx-auto w-full flex-1 px-4 py-8", wide ? "max-w-7xl" : "max-w-4xl"]}>
-			<slot />
+		<main id="main" class="w-full flex-1" style="view-transition-name: page">
+			<div
+				class:list={[
+					"mx-auto w-full px-4 py-10 sm:px-6",
+					width === "narrow" ? "max-w-4xl" : "max-w-6xl",
+				]}
+			>
+				<slot />
+			</div>
 		</main>
 		<Footer />
-		<div
-			id="contact-toast"
-			class="card-3d bg-surface fixed right-4 bottom-4 hidden max-w-xs px-4 py-3 text-sm"
-		>
+		<div id="contact-toast" class="toast card-3d bg-surface max-w-xs px-4 py-3 text-sm" role="status" aria-live="polite">
 			<p class="font-semibold">Thanks for reaching out!</p>
-			<p class="text-muted mt-1">Your message has been sent.</p>
+			<p class="mt-1 text-muted">Your message has been sent.</p>
 		</div>
 		<script>
-			const toast = document.getElementById("contact-toast");
-			if (toast && sessionStorage.getItem("contact-sent")) {
+			document.addEventListener("astro:page-load", () => {
+				const toast = document.getElementById("contact-toast");
+				if (!toast || !sessionStorage.getItem("contact-sent")) return;
 				sessionStorage.removeItem("contact-sent");
-				toast.classList.remove("hidden");
-				setTimeout(() => toast.classList.add("hidden"), 5000);
-			}
+				requestAnimationFrame(() => toast.classList.add("is-visible"));
+				setTimeout(() => toast.classList.remove("is-visible"), 5000);
+			});
+
+			import { morphTarget, showPreview } from "../scripts/project-preview";
+
+			// Page-to-page motion:
+			// - list/home -> project: the clicked tile or preview grows into the
+			//   project header (shared view-transition name), and back again;
+			// - project -> project: the page slides sideways (prev/next).
+			const NAME = "project-hero";
+			const root = document.documentElement;
+			const isWide = () => matchMedia("(min-width: 1024px)").matches;
+			const projectSlug = (url: URL) => {
+				const match = url.pathname.match(/\/projects\/([^/]+)\/?$/);
+				return match ? decodeURIComponent(match[1]) : undefined;
+			};
+			const clearNames = (doc: ParentNode) =>
+				doc
+					.querySelectorAll<HTMLElement>("[data-project], [data-project-link], .project-hero")
+					.forEach((el) => (el.style.viewTransitionName = ""));
+			let morphing = false;
+
+			document.addEventListener("astro:before-preparation", (event) => {
+				clearNames(document);
+				delete root.dataset.slide;
+				morphing = false;
+				const from = projectSlug(event.from);
+				const to = projectSlug(event.to);
+
+				if (from && to) {
+					const pager = event.sourceElement?.closest<HTMLElement>("[data-pager]");
+					root.dataset.slide = pager?.dataset.pager ?? (event.direction === "back" ? "prev" : "next");
+					return;
+				}
+				const target = to
+					? morphTarget(document, to, isWide())
+					: from
+						? document.querySelector<HTMLElement>(".project-hero")
+						: null;
+				if (target) {
+					target.style.viewTransitionName = NAME;
+					morphing = true;
+				}
+			});
+
+			document.addEventListener("astro:before-swap", (event) => {
+				// Root attributes are replaced on swap; carry the slide direction
+				// over and drop it once the transition is done.
+				if (root.dataset.slide) {
+					event.newDocument.documentElement.dataset.slide = root.dataset.slide;
+					event.viewTransition.finished.finally(() => delete root.dataset.slide);
+					return;
+				}
+				if (!morphing) return;
+				const from = projectSlug(event.from);
+				const to = projectSlug(event.to);
+				let target: HTMLElement | null = null;
+				if (to) {
+					target = event.newDocument.querySelector<HTMLElement>(".project-hero");
+				} else if (from) {
+					showPreview(event.newDocument, from);
+					target = morphTarget(event.newDocument, from, isWide());
+				}
+				if (target) target.style.viewTransitionName = NAME;
+			});
 		</script>
 	</body>
 </html>

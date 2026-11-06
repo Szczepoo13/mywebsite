@@ -1,10 +1,11 @@
 ---
-title: "Shared Liquidity ZK Rollups"
+title: "Scaling DeFi with ZK Rollups"
 description: "Two local zkSync chains connected by a hyperbridge, with Uniswap V2 forked on one for token swaps. Simulated multiple IP sources and parallel WebSocket clients to maximize throughput and avoid HTTP overhead, benchmarking 72 TPS."
 date: 2024-11-01
 repo: "https://github.com/Szczepoo13/zkSync-TPS-Benchmark"
 tags: ["python","solidity","rust","zero-knowledge","docker","grafana"]
 researchPaper: "Scaling DeFi with ZK Rollups"
+paperStatus: "published"
 researchPaperUrl: "https://ieeexplore.ieee.org/abstract/document/11466501"
 ---
 

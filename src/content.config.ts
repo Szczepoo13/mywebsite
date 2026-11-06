@@ -34,6 +34,15 @@ const projects = defineCollection({
 		researchPaper: z.string().optional(),
 		// Optional link (e.g. arXiv) the research paper's title points to.
 		researchPaperUrl: z.string().url().optional(),
+		// Where the paper stands, shown as a chip on the homepage tile.
+		paperStatus: z.enum(["published", "accepted"]).optional(),
+		// Hackathon, incubator or competition the project was built for. Puts
+		// it in the "Hackathons & competitions" group on the projects index.
+		competition: z.string().optional(),
+		// Placing or prize, shown as a chip next to the title (e.g. "1st place").
+		award: z.string().optional(),
+		// Shown as a badge; projects still being built usually have no repo yet.
+		status: z.enum(["in-development"]).optional(),
 		// Overrides date-based sorting within a project's group/box on the
 		// projects index. Lower numbers come first; unset projects keep their
 		// date-sorted position after any ordered ones.

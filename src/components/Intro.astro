@@ -1,0 +1,133 @@
+---
+const logo = `${import.meta.env.BASE_URL}images/beaker.webp`;
+---
+
+<div id="intro" class="intro" aria-hidden="true">
+	<div class="intro-bg"></div>
+	<div class="intro-stage">
+		<div class="intro-logo">
+			<img class="intro-logo-base" src={logo} width="156" height="156" alt="" decoding="sync" />
+			<img class="intro-logo-fill" src={logo} width="156" height="156" alt="" decoding="sync" />
+		</div>
+		<div class="intro-meter">
+			<span class="intro-bar"><span class="intro-bar-fill"></span></span>
+			<span class="intro-count">0%</span>
+		</div>
+	</div>
+</div>
+
+<script>
+	const root = document.documentElement;
+	const intro = document.getElementById("intro");
+
+	if (intro && root.classList.contains("intro-pending")) run(intro);
+
+	function run(intro: HTMLElement) {
+		const logo = intro.querySelector<HTMLElement>(".intro-logo")!;
+		const fill = intro.querySelector<HTMLElement>(".intro-logo-fill")!;
+		const bar = intro.querySelector<HTMLElement>(".intro-bar-fill")!;
+		const count = intro.querySelector<HTMLElement>(".intro-count")!;
+		const bg = intro.querySelector<HTMLElement>(".intro-bg")!;
+
+		// The CSS failsafe is only for when this script never runs.
+		intro.style.animation = "none";
+
+		const DURATION = 1500;
+		const start = performance.now();
+		let loaded = document.readyState === "complete";
+		let skipped = false;
+		let done = false;
+
+		addEventListener("load", () => (loaded = true), { once: true });
+		const skip = () => (skipped = true);
+		intro.addEventListener("pointerdown", skip, { once: true });
+		addEventListener("keydown", skip, { once: true });
+
+		const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+		// Liquid surface: a gentle wave whose height flattens as it fills.
+		const surface = (level: number, now: number) => {
+			const amp = 4 * (1 - level) * Math.min(level * 6, 1);
+			const phase = now / 220;
+			const points: string[] = [];
+			const steps = 16;
+			for (let i = 0; i <= steps; i++) {
+				const x = (i / steps) * 100;
+				const y = (1 - level) * 100 + amp * Math.sin((i / steps) * Math.PI * 2 + phase);
+				points.push(`${x}% ${Math.max(0, y).toFixed(2)}%`);
+			}
+			return `polygon(${points.join(", ")}, 100% 100%, 0% 100%)`;
+		};
+
+		const frame = (now: number) => {
+			if (done) return;
+			const t = Math.min((now - start) / DURATION, 1);
+			let p = easeInOut(t);
+			if (!loaded) p = Math.min(p, 0.92);
+			if (skipped || now - start > 3500) p = 1;
+
+			fill.style.clipPath = p >= 1 ? "none" : surface(p, now);
+			bar.style.clipPath = `inset(0 ${((1 - p) * 100).toFixed(2)}% 0 0)`;
+			count.textContent = `${Math.round(p * 100)}%`;
+
+			if (p >= 1) {
+				done = true;
+				setTimeout(leave, skipped ? 0 : 180);
+				return;
+			}
+			requestAnimationFrame(frame);
+		};
+		requestAnimationFrame(frame);
+
+		function leave() {
+			root.classList.add("intro-leaving");
+			const animations: Animation[] = [];
+			const move = { duration: 750, easing: "cubic-bezier(0.65, 0, 0.35, 1)", fill: "forwards" as const };
+
+			// Fly the logo into the header avatar, if the avatar is on screen.
+			const target = document.querySelector<HTMLElement>(".site-header .brand-mark");
+			const to = target?.getBoundingClientRect();
+			const from = logo.getBoundingClientRect();
+			if (to && to.width && to.bottom > 0) {
+				// Keep the logo's slot so the meter doesn't jump up.
+				const slot = document.createElement("div");
+				slot.style.cssText = `width:${from.width}px;height:${from.height}px`;
+				logo.before(slot);
+				Object.assign(logo.style, {
+					position: "fixed",
+					margin: "0",
+					top: `${from.top}px`,
+					left: `${from.left}px`,
+					zIndex: "1",
+				});
+				animations.push(
+					logo.animate(
+						[
+							{ top: `${from.top}px`, left: `${from.left}px`, width: `${from.width}px`, height: `${from.height}px`, boxShadow: "6px 6px 0 #d8341b", borderColor: "#e9eaee" },
+							{ top: `${to.top}px`, left: `${to.left}px`, width: `${to.width}px`, height: `${to.height}px`, boxShadow: "2px 2px 0 #16181d", borderColor: "#16181d" },
+						],
+						move,
+					),
+				);
+			} else {
+				animations.push(logo.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, fill: "forwards" }));
+			}
+
+			// Lift the dark screen like a curtain.
+			animations.push(
+				bg.animate([{ transform: "translateY(0)" }, { transform: "translateY(-101%)" }], {
+					...move,
+					delay: 60,
+				}),
+			);
+
+			Promise.all(animations.map((a) => a.finished)).then(() => {
+				root.classList.remove("intro-pending", "intro-leaving");
+				intro!.remove();
+				try {
+					sessionStorage.setItem("intro-seen", "1");
+				} catch {}
+			});
+		}
+	}
+</script>

@@ -9,44 +9,92 @@ const navLinks = [
 	{ href: `${base}contact/`, label: "Contact" },
 ];
 const socialLinks = [{ href: "https://github.com/Szczepoo13", label: "GitHub" }];
+
+// Breadcrumb path that mirrors the URL: home / projects / some-project.
+const segments = currentPath.slice(base.length).split("/").filter(Boolean);
+const crumbs = [
+	{ label: "home", href: base },
+	...segments.map((segment, i) => ({
+		label: decodeURIComponent(segment),
+		href: `${base}${segments.slice(0, i + 1).join("/")}/`,
+	})),
+];
+// Without in-site history, "back" goes one level up the path.
+const parentHref = crumbs.length > 1 ? crumbs[crumbs.length - 2].href : undefined;
 ---
 
-<header class="bar border-b-2 border-border">
-	<nav class="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-2">
-		<a href={base} class="btn-press block leading-tight">
-			<span class="font-mono text-sm font-bold tracking-tight text-ink">SZCZEPAN GURGUL</span>
-			<span class:list={["block text-xs", isHome ? "font-semibold text-gold" : "text-muted"]}>
-				[home]
-			</span>
-		</a>
-		<div class="flex flex-wrap items-center gap-2">
-			<ul class="flex flex-wrap text-sm">
-				{
-					navLinks.map((link) => (
-						<li class="flex">
-							<a
-								href={link.href}
-								class:list={[
-									"flex items-center px-4 py-1 font-semibold btn-press",
-									currentPath.startsWith(link.href) ? "btn-blue-active" : "btn-blue",
-								]}
-							>
-								{link.label}
-							</a>
-						</li>
-					))
-				}
-			</ul>
-			<ul class="flex list-none flex-wrap items-center gap-4 text-sm">
+<header class="site-header" style="view-transition-name: site-header">
+	<div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-3 px-4 py-2.5 sm:px-6">
+		<div class="flex min-w-0 items-center gap-3">
+			<div class="flex flex-none gap-2" role="group" aria-label="History">
+				<a
+					href={parentHref ?? base}
+					class="hist-btn btn-ghost btn-3d"
+					data-history="back"
+					data-has-parent={parentHref ? "" : undefined}
+					aria-label="Go back"
+					aria-disabled={parentHref ? undefined : "true"}
+					tabindex={parentHref ? undefined : -1}
+				>
+					<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M10 3 5 8l5 5" /></svg>
+				</a>
+				<button type="button" class="hist-btn btn-ghost btn-3d" data-history="forward" aria-label="Go forward" disabled>
+					<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="m6 3 5 5-5 5" /></svg>
+				</button>
+			</div>
+			<a href={base} class="btn-press flex-none" aria-label="Szczepan Gurgul, home">
+				<img src={`${base}images/beaker-sm.webp`} width="34" height="34" alt="" class="brand-mark" />
+			</a>
+			<div class="min-w-0 leading-tight">
+				<a href={base} class="btn-press block text-sm font-bold tracking-tight text-ink" translate="no">
+					SZCZEPAN GURGUL
+				</a>
+				<nav aria-label="Breadcrumb">
+					<ol class:list={["crumbs", isHome && "is-home"]}>
+						{
+							crumbs.map((crumb, i) =>
+								i === crumbs.length - 1 ? (
+									<li aria-current="page">{crumb.label}</li>
+								) : (
+									<li>
+										<a href={crumb.href} class="link-draw">
+											{crumb.label}
+										</a>
+									</li>
+								),
+							)
+						}
+					</ol>
+				</nav>
+			</div>
+		</div>
+		<div class="flex flex-wrap items-center gap-4">
+			<nav aria-label="Main">
+				<ul class="flex text-sm">
+					{
+						navLinks.map((link) => {
+							const active = currentPath.startsWith(link.href);
+							return (
+								<li class="flex">
+									<a
+										href={link.href}
+										aria-current={active ? "page" : undefined}
+										class="nav-tab btn-blue btn-press flex items-center px-4 py-1.5 font-semibold"
+									>
+										{active && <span class="nav-tab-active" aria-hidden="true" />}
+										{link.label}
+									</a>
+								</li>
+							);
+						})
+					}
+				</ul>
+			</nav>
+			<ul class="flex list-none items-center gap-4 text-sm">
 				{
 					socialLinks.map((link) => (
 						<li>
-							<a
-								href={link.href}
-								class="text-accent-blue underline"
-								target="_blank"
-								rel="noreferrer"
-							>
+							<a href={link.href} class="link-inline" target="_blank" rel="noreferrer">
 								{link.label}
 							</a>
 						</li>
@@ -54,5 +102,123 @@ const socialLinks = [{ href: "https://github.com/Szczepoo13", label: "GitHub" }]
 				}
 			</ul>
 		</div>
-	</nav>
+	</div>
 </header>
+
+<style>
+	.hist-btn {
+		display: grid;
+		place-items: center;
+		width: 30px;
+		height: 30px;
+		padding: 0;
+	}
+
+	.hist-btn svg {
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2.5;
+		stroke-linecap: square;
+		stroke-linejoin: miter;
+	}
+
+	.hist-btn[aria-disabled="true"],
+	.hist-btn:disabled {
+		opacity: 0.3;
+		box-shadow: none;
+		transform: none;
+		cursor: default;
+		pointer-events: none;
+	}
+
+	.crumbs {
+		display: flex;
+		min-width: 0;
+		font-size: 12px;
+		color: var(--color-muted);
+	}
+
+	.crumbs::before {
+		content: "[";
+	}
+
+	.crumbs::after {
+		content: "]";
+	}
+
+	/* Parent crumbs keep their size; only the current page's name shrinks
+	   and gets an ellipsis on narrow screens. */
+	.crumbs li {
+		display: flex;
+		flex: none;
+		white-space: nowrap;
+	}
+
+	.crumbs li[aria-current="page"] {
+		flex: 0 1 auto;
+		min-width: 0;
+	}
+
+	.crumbs li + li::before {
+		content: "/";
+		padding-inline: 1px;
+		color: var(--color-border);
+	}
+
+	.crumbs a {
+		color: var(--color-accent-blue);
+	}
+
+	.crumbs [aria-current="page"] {
+		display: block;
+		max-width: 26ch;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		color: var(--color-ink);
+		font-weight: 600;
+	}
+
+	.crumbs.is-home [aria-current="page"] {
+		color: var(--color-gold);
+	}
+</style>
+
+<script>
+	// Back / forward follow the visitor's own history on this site (Navigation
+	// API). With no earlier page on this site, "back" goes one level up.
+	type Nav = EventTarget & { canGoBack: boolean; canGoForward: boolean };
+	const nav = (window as unknown as { navigation?: Nav }).navigation;
+
+	const update = () => {
+		const back = document.querySelector<HTMLAnchorElement>('[data-history="back"]');
+		const forward = document.querySelector<HTMLButtonElement>('[data-history="forward"]');
+		if (!back || !forward) return;
+		const canBack = Boolean(nav?.canGoBack) || back.hasAttribute("data-has-parent");
+		if (canBack) {
+			back.removeAttribute("aria-disabled");
+			back.removeAttribute("tabindex");
+		} else {
+			back.setAttribute("aria-disabled", "true");
+			back.setAttribute("tabindex", "-1");
+		}
+		if (!nav) forward.hidden = true;
+		forward.disabled = !nav?.canGoForward;
+	};
+
+	document.addEventListener("astro:page-load", update);
+	nav?.addEventListener("currententrychange", update);
+
+	document.addEventListener("click", (event) => {
+		const control = (event.target as Element).closest<HTMLElement>("[data-history]");
+		if (!control) return;
+		if (control.dataset.history === "back") {
+			if (nav?.canGoBack) {
+				event.preventDefault();
+				history.back();
+			}
+			return; // otherwise the link goes up one level
+		}
+		event.preventDefault();
+		if (nav?.canGoForward) history.forward();
+	});
+</script>

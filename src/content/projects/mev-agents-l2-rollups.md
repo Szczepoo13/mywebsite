@@ -5,6 +5,7 @@ date: 2026-04-01
 repo: "https://github.com/Szczepoo13/AI-Agents-for-MEV-on-Rollups"
 tags: ["typescript", "python", "ethers.js", "django", "ai agents orchestration", "docker"]
 researchPaper: "Design and Evaluation of AI Agents for MEV on Rollups"
+paperStatus: "accepted"
 order: 1
 ---
 

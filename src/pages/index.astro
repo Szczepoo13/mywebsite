@@ -2,6 +2,9 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Badge from "../components/Badge.astro";
+import ProjectTile from "../components/ProjectTile.astro";
+
+const base = import.meta.env.BASE_URL;
 
 const publications = (await getCollection("publications")).sort(
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
@@ -25,30 +28,14 @@ const stackCategories = [
 	},
 	{
 		label: "Blockchain",
-		items: [
-			"ethereum",
-			"smart contracts",
-			"l1/l2",
-			"foundry",
-			"dex/amm",
-			"zkp",
-			"mev"
-		],
+		items: ["ethereum", "smart contracts", "l1/l2", "foundry", "dex/amm", "zkp", "mev"],
 	},
 	{
-		label: "Software Engineering",
-		items: [
-			"tdd",
-			"linux",
-			"sql",
-			"k8s",
-			"docker",
-			"cloud",
-			"grafana",
-		],
+		label: "Software engineering",
+		items: ["tdd", "linux", "sql", "k8s", "docker", "cloud", "grafana"],
 	},
 	{
-		label: "Programming Languages",
+		label: "Languages",
 		items: ["python", "typescript", "javascript", "bash", "solidity", "rust", "c++"],
 	},
 ];
@@ -63,7 +50,7 @@ const experience = [
 	},
 	{
 		org: "University of Zürich",
-		role: "Graduate Researcher — Blockchain & Distributed Ledger Technologies Group",
+		role: "Graduate Researcher, Blockchain & Distributed Ledger Technologies Group",
 		description:
 			"Conducted research within the Blockchain & DLT Group as part of my MSc at the University of Zürich, resulting in 2 peer-reviewed papers (one published, one accepted and pending publication).",
 	},
@@ -73,27 +60,37 @@ const experience = [
 		description:
 			"Cloud team on a Business Continuity & Disaster Recovery product: backend and frontend work, unit tests, code review, and production incident investigation.",
 	},
+	{
+		org: "TECUMEX",
+		role: "Project Engineer Internship",
+		description:
+			"Embedded and commissioning intern work on marine radar systems in Dubai before moving into distributed systems.",
+	},
 ];
 
 // TODO: replace with real Uniswap v4 hook incubator details.
 const achievements = [
 	{
-		title: "🎓 Graduated with Honors (Magna Cum Laude)",
+		icon: "🎓",
+		title: "Graduated with Honors (Magna Cum Laude)",
 		description:
-			"University of Zürich — M.Sc. Informatics (2026). Graduated magna cum laude for academic excellence.",
+			"University of Zürich, M.Sc. Informatics (2026). Graduated magna cum laude for academic excellence.",
 	},
 	{
-	title: "📄 2 Research Papers & 2 International Conference Presentations",
-	description:
-		"Co-authored two blockchain research papers on AI agents for MEV and ZK rollups (one published, one accepted and pending publication). Presented the work at international conferences in Zürich, Switzerland (BCK24) and Mumbai, India (BCK25).",
+		icon: "📄",
+		title: "2 Research Papers & 2 International Conference Presentations",
+		description:
+			"Co-authored two blockchain research papers on AI agents for MEV and ZK rollups (one published, one accepted and pending publication). Presented the work at international conferences in Zürich, Switzerland (BCK24) and Mumbai, India (BCK25).",
 	},
 	{
-		title: "🦄 Uniswap v4 Hooks Incubator",
+		icon: "🦄",
+		title: "Uniswap v4 Hooks Incubator",
 		description:
 			"Selected for the Uniswap v4 Hooks Incubator (Atrium Academy), protocol engineering cohort focused on designing, implementing, and testing production-ready Uniswap v4 Hooks. Cohort starts in October 2026.",
 	},
 	{
-		title: "🏆 BCOLN Challenge Award — Best Distributed dApp",
+		icon: "🏆",
+		title: "BCOLN Challenge Award, Best Distributed dApp",
 		description:
 			"Winner of the BCOLN Challenge Hackathon (2024) for building a decentralized sports betting platform, competing against 10 teams across Zürich.",
 	},
@@ -101,169 +98,192 @@ const achievements = [
 ---
 
 <BaseLayout title="Szczepan Gurgul" bgPattern="grid">
-	<section class="card-3d bg-surface px-6 py-8">
-		<h1 class="text-2xl font-bold tracking-tight">Szczepan Gurgul</h1>
-		<p class="mt-1 text-sm text-muted">AI × Blockchain Security Engineer</p>
-		<p class="mt-1 text-xs font-medium tracking-wide text-muted uppercase">
-			Distributed Systems • Protocol Engineering • AI Agents
-		</p>
-		<p class="mt-6 max-w-2xl text-sm leading-relaxed">
-			Software engineer specializing in distributed systems, blockchain infrastructure, and AI agents. I
-			build secure, maintainable systems and tooling - from smart contracts and DeFi primitives
-		    to performance-oriented infrastructure.
-		</p>
-		<div class="mt-6 border-t border-border pt-4 text-sm">
-			<p class="font-bold">Education</p>
-			<p class="mt-1 text-muted">M.Sc. Informatics, University of Zürich — 2026</p>
-			<p class="mt-1 text-muted">
-				B.Sc. Mechatronic Engineering, AGH University of Science and Technology — 2023
+	<!-- One tile, split into panes: intro and education on top, the tech
+	     stack across the full width below. -->
+	<section class="card-3d grid gap-[2px] bg-border lg:grid-cols-[minmax(0,1fr)_22rem]" aria-labelledby="intro-title">
+		<div class="bg-surface px-6 py-8 sm:px-8 sm:py-10">
+			<h1 id="intro-title" class="text-3xl font-bold tracking-tight sm:text-4xl">Szczepan Gurgul</h1>
+			<p class="mt-2 text-base">AI × Blockchain Security Engineer</p>
+			<p class="mt-1 text-xs text-muted">distributed systems / protocol engineering / ai agents</p>
+			<p class="mt-6 max-w-[64ch] text-sm leading-relaxed">
+				Software engineer specializing in distributed systems, blockchain infrastructure, and AI
+				agents. I build secure, maintainable systems and tooling, from smart contracts and DeFi
+				primitives to performance-oriented infrastructure.
 			</p>
+			<div class="mt-7 flex flex-wrap gap-3 text-sm">
+				<a href={`${base}contact/`} class="btn-blue btn-3d px-4 py-2 font-semibold">Get in touch</a>
+				<a href={`${base}projects/`} class="btn-ghost btn-3d px-4 py-2 font-semibold">Browse projects</a>
+			</div>
 		</div>
-		<div class="mt-6 border-t border-border pt-4 text-sm">
-			<p class="font-bold">Stack</p>
-			<div class="mt-3 flex flex-col gap-3">
+		<div class="flex flex-col justify-between gap-8 bg-surface px-6 py-8 text-sm sm:px-8 sm:py-10">
+			<div>
+				<h2 class="font-bold">Education</h2>
+				<dl class="mt-3 flex flex-col gap-3">
+					<div>
+						<dt class="font-semibold">M.Sc. Informatics</dt>
+						<dd class="text-muted">University of Zürich, Switzerland, 2026</dd>
+					</div>
+					<div>
+						<dt class="font-semibold">B.Sc. Mechatronic Engineering</dt>
+						<dd class="text-muted">AGH University of Science and Technology, Poland, 2023</dd>
+					</div>
+				</dl>
+			</div>
+			<div>
+				<h2 class="font-bold">Elsewhere</h2>
+				<ul class="mt-3 flex flex-wrap gap-x-5 gap-y-2">
+					<li><a href="https://github.com/Szczepoo13" class="link-inline" target="_blank" rel="noreferrer">GitHub</a></li>
+					<li><a href="https://ch.linkedin.com/in/szczepangurgul" class="link-inline" target="_blank" rel="noreferrer">LinkedIn</a></li>
+					<li><a href="mailto:contact@sgurgul.dev" class="link-inline">contact@sgurgul.dev</a></li>
+				</ul>
+			</div>
+		</div>
+		<!-- Tech stack: full-width section, one labelled row per area. -->
+		<div class="bg-surface px-6 py-8 sm:px-8 lg:col-span-2">
+			<h2 class="text-sm font-bold">Tech stack</h2>
+			<dl class="mt-3">
 				{
-					stackCategories.map((category) => (
-						<div>
-							<p class="text-xs font-semibold tracking-wide text-muted uppercase">
-								{category.label}
-							</p>
-							<div class="mt-1.5 flex flex-wrap gap-2">
-								{category.items.map((item) => (
-									<Badge label={item} />
-								))}
-							</div>
+					stackCategories.map((category, i) => (
+						<div
+							class:list={[
+								"grid gap-2 py-3.5 sm:grid-cols-[13rem_minmax(0,1fr)] sm:items-center sm:gap-6",
+								i > 0 && "border-t border-surface-alt",
+							]}
+						>
+							<dt class="text-sm font-semibold">{category.label}</dt>
+							<dd>
+								<ul class="flex flex-wrap gap-2">
+									{category.items.map((item) => (
+										<li>
+											<Badge label={item} size="md" />
+										</li>
+									))}
+								</ul>
+							</dd>
 						</div>
 					))
 				}
-			</div>
+			</dl>
 		</div>
 	</section>
 
-	<section class="mt-6">
-		<h2 class="text-xl font-bold tracking-tight">Experience</h2>
-		<div class="mt-4 border-l-2 border-border pl-6">
+	<section class="mt-14" aria-labelledby="experience-title">
+		<h2 id="experience-title" class="text-xl font-bold tracking-tight">Experience</h2>
+		<ol class="mt-5 border-l-2 border-ink pl-6">
 			{
-				experience.map((job) => (
-					<div class="timeline-item relative pb-6">
+				experience.map((job, i) => (
+					<li class:list={["timeline-item relative", i < experience.length - 1 && "pb-7"]}>
 						<span
 							class:list={[
-								"timeline-dot absolute -left-[31px] top-1 h-3 w-3 rounded-full",
+								"timeline-dot absolute top-1 -left-[32px] h-3.5 w-3.5 rounded-full",
 								job.current && "bg-accent-blue",
 							]}
+							aria-hidden="true"
 						/>
-						<p class="text-sm">
-							<span class="font-bold tracking-tight">{job.role}</span>{" "}
-							<span class="font-bold text-muted">—</span>{" "}
-							<span class="text-base text-muted italic">{job.org}</span>
+						<h3 class="text-sm font-bold tracking-tight">
+							{job.role}
 							{job.current && (
-								<span class="ml-1 text-xs font-semibold text-accent-blue">(current)</span>
+								<span class="ml-2 inline-block border-2 border-accent-blue px-1.5 text-xs font-semibold text-accent-blue">
+									now
+								</span>
 							)}
-						</p>
-						<p class="mt-1 text-sm text-muted">{job.description}</p>
-					</div>
+						</h3>
+						<p class="text-sm text-muted italic">{job.org}</p>
+						<p class="mt-2 max-w-[80ch] text-sm text-muted">{job.description}</p>
+					</li>
 				))
 			}
-			<div class="timeline-item relative">
-				<span class="timeline-dot absolute -left-[31px] top-1 h-3 w-3 rounded-full" />
-				<p class="text-sm">
-					<span class="font-bold tracking-tight">Project Engineer Internship</span>{" "}
-					<span class="font-bold text-muted">—</span>{" "}
-					<span class="text-base text-muted italic">TECUMEX</span>
-				</p>
-				<p class="mt-1 text-sm text-muted">
-					Embedded and commissioning intern work on marine radar systems in Dubai before
-					moving into distributed systems.
-				</p>
-			</div>
-		</div>
+		</ol>
 	</section>
 
-	<section class="mt-6">
-		<div class="flex items-baseline justify-between">
-			<h2 class="text-xl font-bold tracking-tight">Projects</h2>
-			<a
-				href={`${import.meta.env.BASE_URL}projects/`}
-				class="text-sm font-semibold text-accent-blue hover:underline"
-			>
-				All projects →
-			</a>
+	<section class="mt-14" aria-labelledby="projects-title">
+		<div class="flex items-baseline justify-between gap-4">
+			<h2 id="projects-title" class="text-xl font-bold tracking-tight">Projects</h2>
+			<a href={`${base}projects/`} class="link-bracket text-sm">all projects</a>
 		</div>
-		<div class="mt-4 grid gap-3 sm:grid-cols-3">
+		<div class="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
 			{
 				featuredProjects.map((project) => (
-					<a
-						href={`${import.meta.env.BASE_URL}projects/${project.id}/`}
-						class="card-3d bg-surface block px-5 py-4"
-					>
-						<h3 class="text-base font-bold tracking-tight">{project.data.title}</h3>
-						<p class="mt-2 line-clamp-4 text-sm text-muted">{project.data.description}</p>
-					</a>
+					<ProjectTile
+						slug={project.id}
+						title={project.data.title}
+						description={project.data.description}
+						repo={project.data.repo}
+						award={project.data.award}
+						paperStatus={project.data.paperStatus}
+						compact
+					/>
 				))
 			}
 		</div>
 	</section>
 
-	<section class="mt-6">
-		<h2 class="text-xl font-bold tracking-tight">Selected Achievements</h2>
-		<div class="mt-4 flex flex-col gap-3">
+	<section class="mt-14" aria-labelledby="achievements-title">
+		<h2 id="achievements-title" class="text-xl font-bold tracking-tight">Selected achievements</h2>
+		<ul class="mt-5 grid gap-5 md:grid-cols-2">
 			{
 				achievements.map((achievement) => (
-					<div class="card-3d bg-surface px-5 py-4">
-						<h3 class="text-base font-bold tracking-tight">{achievement.title}</h3>
-						{achievement.description && (
+					<li class="card-3d flex gap-4 bg-surface px-5 py-4">
+						<span
+							class="grid h-10 w-10 flex-none place-items-center border-2 border-ink bg-surface-alt text-lg"
+							aria-hidden="true"
+						>
+							{achievement.icon}
+						</span>
+						<div class="min-w-0">
+							<h3 class="text-base font-bold tracking-tight">{achievement.title}</h3>
 							<p class="mt-2 text-sm text-muted">{achievement.description}</p>
-						)}
-						{achievement.highlights && (
-							<ul class="mt-2 list-disc space-y-2 pl-4 text-sm text-muted">
-								{achievement.highlights.map((point) => <li>{point}</li>)}
-							</ul>
-						)}
-					</div>
+						</div>
+					</li>
 				))
 			}
-		</div>
+		</ul>
 	</section>
 
-	<section class="mt-6">
-		<h2 class="text-xl font-bold tracking-tight">Publications</h2>
-		<div class="mt-4 grid gap-2 sm:grid-cols-2">
+	<section class="mt-14" aria-labelledby="publications-title">
+		<h2 id="publications-title" class="text-xl font-bold tracking-tight">Publications</h2>
+		<div class="mt-5 grid items-start gap-5 md:grid-cols-2">
 			{
 				publications.map((publication) => (
-					<div class="card-3d bg-surface px-3 py-2 text-xs">
-						<p class="text-base font-bold tracking-tight">
+					<article class="card-3d bg-surface px-5 py-4 text-sm">
+						<h3 class="text-base font-bold tracking-tight">
 							{publication.data.url ? (
-								<a
-									href={publication.data.url}
-									class="text-accent-blue underline"
-									target="_blank"
-									rel="noreferrer"
-								>
+								<a href={publication.data.url} class="link-inline" target="_blank" rel="noreferrer">
 									{publication.data.title}
 								</a>
 							) : (
 								publication.data.title
 							)}
-						</p>
-						<p class="mt-1 text-muted">
-							{publication.data.venue} · {publication.data.date.getFullYear()}
+						</h3>
+						<p class="mt-1 text-xs text-muted">
+							{publication.data.venue}, {publication.data.date.getFullYear()}
 						</p>
 						{publication.data.description && (
-							<p class="mt-2 text-muted">{publication.data.description}</p>
-						)}
-						{publication.data.highlights && (
-							<ul class="mt-2 list-disc space-y-2 pl-4 text-muted">
-								{publication.data.highlights.map((point) => <li>{point}</li>)}
-							</ul>
+							<p class="mt-3 text-xs text-muted">{publication.data.description}</p>
 						)}
 						{publication.data.tags.length > 0 && (
-							<div class="mt-2 flex flex-wrap gap-1">
+							<ul class="mt-3 flex flex-wrap gap-1.5" aria-label="Tags">
 								{publication.data.tags.map((tag) => (
-									<Badge label={tag} />
+									<li>
+										<Badge label={tag} />
+									</li>
 								))}
-							</div>
+							</ul>
 						)}
-					</div>
+						{publication.data.highlights && (
+							<details class="disclosure mt-4 border-t-2 border-border pt-3">
+								<summary class="flex items-center gap-2 text-xs font-semibold">
+									<span class="disclosure-icon" aria-hidden="true">+</span>
+									What the work involved
+								</summary>
+								<ul class="mt-3 list-disc space-y-2 pl-4 text-xs text-muted">
+									{publication.data.highlights.map((point) => (
+										<li>{point}</li>
+									))}
+								</ul>
+							</details>
+						)}
+					</article>
 				))
 			}
 		</div>

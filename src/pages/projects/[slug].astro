@@ -2,6 +2,9 @@
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Badge from "../../components/Badge.astro";
+import ImageZoom from "../../components/ImageZoom.astro";
+import { paperSiteName } from "../../lib/paper";
+import { getOrderedProjects, projectContext } from "../../lib/projects";
 
 export async function getStaticPaths() {
 	const projects = await getCollection("projects");
@@ -13,63 +16,129 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const { Content } = await render(project);
+const base = import.meta.env.BASE_URL;
+
+// Previous / next in the same order as the projects page.
+const ordered = await getOrderedProjects();
+const index = ordered.findIndex((p) => p.id === project.id);
+const prev = index > 0 ? ordered[index - 1] : undefined;
+const next = index < ordered.length - 1 ? ordered[index + 1] : undefined;
 ---
 
-<BaseLayout title={`${project.data.title} — Szczepan Gurgul`}>
-	<article class="card px-6 py-6">
-		<h1 class="text-xl font-bold tracking-tight">{project.data.title}</h1>
+<BaseLayout title={`${project.data.title} — Szczepan Gurgul`} description={project.data.description} width="narrow">
+	<!-- Grows out of the tile / preview you clicked (shared view-transition name, set by script). -->
+	<header class="project-hero card-3d bg-surface px-6 py-6 sm:px-8">
+		<p class="text-xs font-semibold text-gold-ink">{projectContext(project)}</p>
+		<h1 class="mt-2 text-2xl font-bold tracking-tight">
+			{project.data.title}
+			{project.data.award && <span class="award-chip ml-2 align-middle">{project.data.award}</span>}
+			{project.data.status === "in-development" && (
+				<span class="status-chip ml-2 align-middle">Work in progress</span>
+			)}
+		</h1>
+		<p class="mt-3 max-w-[70ch] text-sm text-muted">{project.data.description}</p>
 		{
-			project.data.researchPaper && (
-				<p class="mt-1 text-xs font-semibold text-gold">
-					Part of research paper:{" "}
-					{project.data.researchPaperUrl ? (
-						<a href={project.data.researchPaperUrl} target="_blank" rel="noreferrer" class="hover:underline">
-							{project.data.researchPaper}
-						</a>
-					) : (
-						<a href={`${import.meta.env.BASE_URL}projects/`} class="hover:underline">
-							{project.data.researchPaper}
-						</a>
-					)}
-				</p>
+			project.data.tags.length > 0 && (
+				<ul class="mt-4 flex flex-wrap gap-2" aria-label="Tags">
+					{project.data.tags.map((tag) => (
+						<li>
+							<Badge label={tag} />
+						</li>
+					))}
+				</ul>
 			)
 		}
 		{
-			project.data.tags.length > 0 && (
-				<div class="mt-3 flex flex-wrap gap-2">
-					{project.data.tags.map((tag) => (
-						<Badge label={tag} />
-					))}
+			(project.data.repo || project.data.url || project.data.researchPaperUrl) && (
+				<div class="mt-5 flex flex-wrap gap-2 text-xs">
+					{project.data.repo && (
+						<a
+							href={project.data.repo}
+							class="btn-blue btn-3d px-3 py-1 font-semibold"
+							target="_blank"
+							rel="noreferrer"
+						>
+							Repo
+						</a>
+					)}
+					{project.data.url && (
+						<a
+							href={project.data.url}
+							class="btn-blue btn-3d px-3 py-1 font-semibold"
+							target="_blank"
+							rel="noreferrer"
+						>
+							Live
+						</a>
+					)}
+					{project.data.researchPaperUrl && (
+						<a
+							href={project.data.researchPaperUrl}
+							class="btn-ghost btn-3d px-3 py-1 font-semibold"
+							target="_blank"
+							rel="noreferrer"
+						>
+							Read the paper on {paperSiteName(project.data.researchPaperUrl)}
+						</a>
+					)}
 				</div>
 			)
 		}
-		<div class="mt-3 flex gap-2 text-xs">
-			<a href={`${import.meta.env.BASE_URL}projects/`} class="btn-blue btn-3d px-3 py-1 font-semibold">
-				← Back to Projects
-			</a>
-			{project.data.repo && (
-				<a
-					href={project.data.repo}
-					class="btn-blue btn-3d px-3 py-1 font-semibold"
-					target="_blank"
-					rel="noreferrer"
-				>
-					Repo
-				</a>
-			)}
-			{project.data.url && (
-				<a
-					href={project.data.url}
-					class="btn-blue btn-3d px-3 py-1 font-semibold"
-					target="_blank"
-					rel="noreferrer"
-				>
-					Live
-				</a>
-			)}
-		</div>
-		<div class="prose prose-sm mt-6 max-w-none">
+	</header>
+
+	<article class="card mt-6 px-6 py-6 sm:px-8">
+		<div class="prose prose-sm max-w-none" data-zoomable>
 			<Content />
 		</div>
 	</article>
+
+	<!-- Step through projects one by one (also ← / → on the keyboard). -->
+	<nav class="mt-8 grid gap-4 sm:grid-cols-2" aria-label="More projects">
+		{
+			prev ? (
+				<a href={`${base}projects/${prev.id}/`} class="pager card-3d card-link bg-surface px-5 py-4" data-pager="prev" rel="prev">
+					<span class="text-xs text-muted">
+						<span aria-hidden="true">← </span>Previous project
+					</span>
+					<span class="mt-1 block text-sm font-bold tracking-tight">{prev.data.title}</span>
+				</a>
+			) : (
+				<span class="hidden sm:block" />
+			)
+		}
+		{
+			next && (
+				<a
+					href={`${base}projects/${next.id}/`}
+					class="pager card-3d card-link bg-surface px-5 py-4 text-right"
+					data-pager="next"
+					rel="next"
+				>
+					<span class="text-xs text-muted">
+						Next project<span aria-hidden="true"> →</span>
+					</span>
+					<span class="mt-1 block text-sm font-bold tracking-tight">{next.data.title}</span>
+				</a>
+			)
+		}
+	</nav>
+
+	<ImageZoom />
 </BaseLayout>
+
+<script>
+	// ← / → step to the previous / next project, unless the visitor is typing
+	// or using a modifier (browser shortcuts).
+	document.addEventListener("keydown", (event) => {
+		if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+		if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+		const target = event.target as HTMLElement;
+		if (target.closest("input, textarea, select, [contenteditable], dialog[open]")) return;
+		const link = document.querySelector<HTMLAnchorElement>(
+			`[data-pager="${event.key === "ArrowLeft" ? "prev" : "next"}"]`,
+		);
+		if (!link) return;
+		event.preventDefault();
+		link.click();
+	});
+</script>
