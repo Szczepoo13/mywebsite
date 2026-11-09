@@ -526,8 +526,11 @@ p {
 	z-index: 1;
 }
 
-/* The fake "Details" button follows the tile's hover/press state. */
+/* The fake "Details" button follows the tile's hover/press state. It must
+   let clicks through to the tile's link: its press animation (transform)
+   would otherwise lift it above the link and swallow the click. */
 .tile-cta {
+	pointer-events: none;
 	transition:
 		transform 0.08s ease-out,
 		box-shadow 0.08s ease-out,
